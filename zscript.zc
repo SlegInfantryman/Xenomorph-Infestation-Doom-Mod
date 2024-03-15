@@ -1,0 +1,1612 @@
+
+
+Class Facehugger : Actor
+{
+	Default
+	{
+	Tag "Xenomorph Warrior Facehugger";
+	Health 25;
+	GibHealth -5;
+	Radius 10;
+	Height 10;
+	Mass 100;
+	Speed 15;
+	Meleerange 50;
+	MeleeDamage 1;
+	PainThreshold 1;
+	PainChance 225;
+	PainChance "Acid", 0;
+	DamageFactor "Acid", 0;
+	PainChance "XENO", 0;
+	DamageFactor "XENO", 0;
+	Gravity 1.0;
+	Friction 1.0;
+	YScale 0.1;
+	XScale 0.12;
+	MaxDropoffHeight 750;
+	MaxStepHeight 256;
+	Species "Xenomorph";
+	Monster;
+	BloodColor "Green";
+	LightLevel 25;
+	+ADDLIGHTLEVEL
+	+SOLID
+	+SHOOTABLE
+	+MISSILEMORE
+	+THRUSPECIES
+	+THRUGHOST
+	+MISSILEEVENMORE
+	+SEEFRIENDLYMONSTERS
+	+QUICKTORETALIATE
+	+BLOCKASPLAYER
+	+LOOKALLAROUND
+	+NOBLOCKMONST
+	+SHADOW
+	+ALWAYSFAST
+	+NOINFIGHTING
+	SeeSound "Facehugger/Idle";
+	PainSound "EMPTY/BLANK";
+	DeathSound "Facehugger/Death";
+	ActiveSound "Facehugger/Idle";
+	HitObituary "You were used as a host by a Facehugger, your fate is sealed.";
+	Obituary "You were used as a host by a Facehugger, your fate is sealed.";
+	}
+	void A_Checksky()
+	{
+	if (TexMan.GetName(ceilingpic) == "F_SKY1")
+	setStatelabel("Idle.Jump");
+	return;
+	}
+	
+	
+	States
+	{
+	Spawn:
+		FHGR HH 1;
+		FHGR H 1 ACS_NamedExecute("XenoAggro",0);
+		FHGR H 1 A_StartSound("Facehugger/Tail",0);
+		FHGR H 1 {A_StartSound("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		FHGR H 1 A_FaceTarget;
+		FHGR H 1 A_ChangeVelocity(20,0,2,CVF_RELATIVE);
+		FHGR IJK 3;
+		FHGR K 1 A_CustomMeleeAttack((2),"Facehugger/Tail","EMPTY/BLANK","Host");
+		FHGR K 1 A_ChangeVelocity(0,0,0);
+		FHGR HGFA 3;
+		FHGR B 0 A_Jump(100,"Idle.Hide");
+		goto See;
+	Idle:
+		FHGR AFG 3;
+		FHGR G 32 A_PlaySound("Facehugger/Idle");
+		FHGR GFA 3;
+		FHGR A 1 A_Jump(256,"Idle.Idle");
+		loop;
+	Idle.Victory:
+		FHGR AFG 3;
+		FHGR HK 3;
+		FHGR K 0
+		{
+		bNOGRAVITY=True;
+		}
+		FHGR L 3 A_ChangeVelocity(0,0,50);
+		FHGR O 300 A_ChangeVelocity(0,0,50);
+		FHGR L 3 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGR O 1 A_Jump(256,"Idle.Idle");
+		goto See;
+	Idle.Idle:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGR A 3 A_Jump(100,"See");
+		FHGR A 1 A_SetSpeed(35);
+		FHGR A 1 
+		{
+		bFRIGHTENED = False;
+		}
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGR BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGR BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGR BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGR BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGR A 3 A_Jump(128,"Melee.Hide");
+		Loop;
+	See: 
+		FHGR A 1 A_SetSpeed(10);
+		TNT1 A 0
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGR A 0 A_CheckProximity("Idle.Host","CIVPedFemaleType1",1500,1,CPXF_SETTARGET);
+		FHGR A 0 A_Jump(80,"Idle.Hide");
+		FHGR A 0 A_Jump(150,"Idle.Jump");
+		FHGR A 0 A_Jump(100,"Idle.Creep");
+		loop;
+	Idle.ComeBack: 
+		FHGR A 1 A_SetSpeed(15);
+		TNT1 A 0
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = True;
+		}
+		FHGR A 0 A_Jump(200,"Idle.Creep");
+		FHGR A 0 A_Jump(160,"Idle.Jump");
+		FHGR A 0 A_Jump(160,"Idle.Hide");
+		loop;
+	Idle.Hide:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = True;
+		}
+		FHGR A 1 A_SetSpeed(35);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR A 3 A_Jump(128,"Melee.Hide");
+		goto See;
+	Melee.Hide:
+		TNT1 A 0 A_CheckSky();
+		FHGR AFG 3; 
+		FHGR HK 3;
+		FHGR K 0 
+		{
+		bNOGRAVITY=True;
+		}
+		FHGR L 3 A_ChangeVelocity(0,0,50);
+		FHGR O 300 A_ChangeVelocity(0,0,50);
+		FHGR L 3 
+		{
+		bNOGRAVITY = False;
+		}
+		goto See;
+	Idle.Jump:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGR A 3 A_Jump(100,"See");
+		FHGR A 1 A_SetSpeed(40);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		Goto See;
+	Melee.Jump:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGR A 2 A_SetSpeed(25);
+		FHGR AFG 2 A_FaceTarget;
+		FHGR H 1 A_StartSound("Facehugger/Tail",0);
+		FHGR H 1 {A_StartSound("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		FHGR H 1 A_FaceTarget;
+		FHGR IJK 3;
+		FHGR K 1 {A_ChangeVelocity(20,0,2,CVF_RELATIVE);A_CustomMeleeAttack((2),"Facehugger/Tail","EMPTY/BLANK","Host");}
+		FHGR K 1 A_ChangeVelocity(0,0,0);
+		FHGR HGFA 3 A_Jump(256,"Idle.Creepy");
+		goto See;
+	Idle.Host:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGR A 3 A_Jump(100,"See");
+		FHGR A 1 A_SetSpeed(40);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		Goto See;
+	Melee.Host:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGR A 2 A_SetSpeed(25);
+		FHGR AFG 2 A_FaceTarget;
+		FHGR H 1 A_StartSound("Facehugger/Tail",0);
+		FHGR H 1 {A_StartSound("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		FHGR H 1 A_FaceTarget;
+		FHGR IJK 3;
+		FHGR K 1 {A_ChangeVelocity(20,0,2,CVF_RELATIVE);A_CustomMeleeAttack((2),"Facehugger/Tail","EMPTY/BLANK","Host");}
+		FHGR K 1 A_ChangeVelocity(0,0,0);
+		FHGR HGFA 3 A_Jump(256,"Idle.Creepy");
+		goto See;
+	Idle.Creep:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGR A 3 A_Jump(100,"See");
+		FHGR A 1 A_SetSpeed(25);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGR A 3 A_Jump(100,"See");
+		FHGR A 1 A_SetSpeed(25);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		goto See;
+	Idle.Creepy:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGR A 3 A_Jump(100,"See");
+		FHGR A 1 A_SetSpeed(25);
+		FHGR BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGR BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGR BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGR BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGR BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGR BCDEBCDEBCDE 3 A_Chase(null,null);
+		goto See;
+	Pain:
+		FHGR A 0 A_Jump(100,"Idle.Hide");
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGR L 3 A_StartSound("Facehugger/Death",0);
+		FHGR LLL 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE);
+		FHGR M 15 
+		{
+		bNOTARGET = TRUE;
+		}
+		FHGR NMN 3;
+		FHGR M 50;
+		FHGR L 1 
+		{
+		bNOTARGET = False;
+		}
+		FHGR A 3 A_Jump(256,"Idle.ComeBack");
+		goto See;
+	Death:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGR L 3 A_StartSound("Facehugger/Death",0);
+		FHGR L 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE);
+		FHGR M 15 A_NoBlocking;
+		FHGR NMN 5;
+		FHGR M 15;
+		FHGR M -1;
+		stop;
+	Pain.Hosted:
+		TNT1 A 1 A_NoBlocking;
+		TNT1 A -1;
+		stop;
+	Death.Hosted:
+		TNT1 A 1 A_NoBlocking;
+		TNT1 A -1;
+		stop;
+  }
+}
+
+Class FacehuggerQ : Actor
+{
+	Default
+	{
+	Tag "Xenomorph Royal Facehugger";
+	Health 100;
+	GibHealth -5;
+	Radius 10;
+	Height 10;
+	Mass 100;
+	Speed 15;
+	Meleerange 50;
+	MeleeDamage 1;
+	PainThreshold 1;
+	PainChance 225;
+	PainChance "Acid", 0;
+	DamageFactor "Acid", 0;
+	PainChance "XENO", 0;
+	DamageFactor "XENO", 0;
+	Gravity 1.0;
+	Friction 1.0;
+	YScale 0.15;
+	XScale 0.17;
+	MaxDropoffHeight 750;
+	MaxStepHeight 256;
+	Species "Xenomorph";
+	Monster;
+	BloodColor "Green";
+	LightLevel 25;
+	+ADDLIGHTLEVEL
+	+SOLID
+	+BUDDHA
+	+SHOOTABLE
+	+MISSILEMORE
+	+THRUSPECIES
+	+THRUGHOST
+	+MISSILEEVENMORE
+	+SEEFRIENDLYMONSTERS
+	+QUICKTORETALIATE
+	+FULLVOLSEE
+	+BLOCKASPLAYER
+	+LOOKALLAROUND
+	+NOBLOCKMONST
+	+SHADOW
+	+ALWAYSFAST
+	+NOINFIGHTING
+	SeeSound "Facehugger/Idle";
+	PainSound "EMPTY/BLANK";
+	DeathSound "Facehugger/Death";
+	ActiveSound "Facehugger/Idle";
+	HitObituary "You were used as a host by a Facehugger, your fate is sealed.";
+	Obituary "You were used as a host by a Facehugger, your fate is sealed.";
+	}
+	void A_Checksky()
+	{
+	if (TexMan.GetName(ceilingpic) == "F_SKY1")
+	setStatelabel("Idle.Jump");
+	return;
+	}
+	
+	
+	States
+	{
+	Spawn:
+		FHGQ HH 1;
+		FHGQ H 1 ACS_NamedExecute("XenoAggro",0);
+		FHGQ H 1 A_StartSound("Facehugger/Tail",0);
+		FHGQ H 1 {A_StartSound("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		FHGQ H 1 A_FaceTarget;
+		FHGQ H 1 A_ChangeVelocity(20,0,2,CVF_RELATIVE);
+		FHGQ IJK 3;
+		FHGQ K 1 A_CustomMeleeAttack((2),"Facehugger/Tail","EMPTY/BLANK","Host");
+		FHGQ K 1 A_ChangeVelocity(0,0,0);
+		FHGQ HGFA 3;
+		FHGQ B 0 A_Jump(100,"Idle.Hide");
+		goto See;
+	Idle:
+		FHGQ AFG 3;
+		FHGQ G 32 A_PlaySound("Facehugger/Idle");
+		FHGQ GFA 3;
+		FHGQ A 1 A_Jump(256,"Idle.Idle");
+		loop;
+	Idle.Victory:
+		FHGQ AFG 3;
+		FHGQ HK 3;
+		FHGQ K 0
+		{
+		bNOGRAVITY=True;
+		}
+		FHGQ L 3 A_ChangeVelocity(0,0,50);
+		FHGQ O 300 A_ChangeVelocity(0,0,50);
+		FHGQ L 3 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGR O 1 A_Jump(256,"Idle.Idle");
+		goto See;
+	Idle.Idle:
+		FHGQ A 0 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGQ A 3 A_Jump(100,"See");
+		FHGQ A 1 A_SetSpeed(35);
+		FHGQ A 1 
+		{
+		bFRIGHTENED = False;
+		}
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGQ BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGQ BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGQ BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGQ BCDEBCDEBCDE 3 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		FHGQ A 3 A_Jump(128,"Melee.Hide");
+		Loop;
+	See: 
+		FHGQ A 1 A_SetSpeed(10);
+		TNT1 A 0
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGR A 0 A_CheckProximity("Idle.Host","CIVPedFemaleType1",1500,1,CPXF_SETTARGET);
+		FHGQ A 0 A_Jump(80,"Idle.Hide");
+		FHGQ A 0 A_Jump(150,"Idle.Jump");
+		FHGQ A 0 A_Jump(100,"Idle.Creep");
+		loop;
+	Idle.ComeBack: 
+		FHGR A 1 A_SetSpeed(15);
+		TNT1 A 0
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = True;
+		}
+		FHGQ A 0 A_Jump(200,"Idle.Creep");
+		FHGQ A 0 A_Jump(160,"Idle.Jump");
+		FHGQ A 0 A_Jump(160,"Idle.Hide");
+		loop;
+	Idle.Hide:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = True;
+		}
+		FHGQ A 1 A_SetSpeed(35);
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ A 3 A_Jump(128,"Melee.Hide");
+		goto See;
+	Melee.Hide:
+		TNT1 A 0 A_CheckSky();
+		FHGQ AFG 3; 
+		FHGQ HK 3;
+		FHGQ K 0 
+		{
+		bNOGRAVITY=True;
+		}
+		FHGQ L 3 A_ChangeVelocity(0,0,50);
+		FHGQ O 150 A_ChangeVelocity(0,0,50);
+		FHGQ L 3 
+		{
+		bNOGRAVITY = False;
+		}
+		goto See;
+	Idle.Jump:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGQ A 3 A_Jump(100,"See");
+		FHGQ A 1 A_SetSpeed(40);
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		Goto See;
+	Melee.Jump:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGQ A 2 A_SetSpeed(25);
+		FHGQ AFG 2 A_FaceTarget;
+		FHGQ H 1 A_StartSound("Facehugger/Tail",0);
+		FHGQ H 1 {A_StartSound("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		FHGQ H 1 A_FaceTarget;
+		FHGQ IJK 3;
+		FHGQ K 1 {A_ChangeVelocity(20,0,2,CVF_RELATIVE);A_CustomMeleeAttack((2),"Facehugger/Tail","EMPTY/BLANK","HostQ");}
+		FHGQ K 1 A_ChangeVelocity(0,0,0);
+		FHGQ HGFA 3 A_Jump(256,"Idle.Creepy");
+		goto See;
+	Idle.Host:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGQ A 3 A_Jump(100,"See");
+		FHGQ A 1 A_SetSpeed(40);
+		FHGQ B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGR B 0 A_StartSound("Facehugger/Run",0);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Host",null);
+		Goto See;
+	Melee.Host:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGQ A 2 A_SetSpeed(25);
+		FHGQ AFG 2 A_FaceTarget;
+		FHGQ H 1 A_StartSound("Facehugger/Tail",0);
+		FHGQ H 1 {A_StartSound("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		FHGQ H 1 A_FaceTarget;
+		FHGQ IJK 3;
+		FHGQ K 1 {A_ChangeVelocity(20,0,2,CVF_RELATIVE);A_CustomMeleeAttack((2),"Facehugger/Tail","EMPTY/BLANK","HostQ");}
+		FHGQ K 1 A_ChangeVelocity(0,0,0);
+		FHGQ HGFA 3 A_Jump(256,"Idle.Creepy");
+		goto See;
+	Idle.Creep:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGQ A 3 A_Jump(100,"See");
+		FHGQ A 1 A_SetSpeed(25);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGQ A 3 A_Jump(100,"See");
+		FHGQ A 1 A_SetSpeed(25);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase("Melee.Jump",null);
+		goto See;
+	Idle.Creepy:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = TRUE;
+		}
+		FHGQ A 3 A_Jump(100,"See");
+		FHGQ A 1 A_SetSpeed(25);
+		FHGQ BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		FHGQ BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase(null,null);
+		FHGQ BCDEBCDEBCDE 3 A_Chase(null,null);
+		goto See;
+	Pain:
+		FHGR A 0 A_Jump(100,"Idle.Hide");
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGQ L 3 A_StartSound("Facehugger/Death",0);
+		FHGQ LLL 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE);
+		FHGQ M 15 
+		{
+		bNOTARGET = TRUE;
+		}
+		FHGQ NMN 3;
+		FHGQ M 50;
+		FHGQ L 1 
+		{
+		bNOTARGET = False;
+		bBUDDHA = False;
+		}
+		FHGR A 3 A_Jump(256,"Idle.ComeBack");
+		goto See;
+	Pain.Hosted:
+		TNT1 A 1 A_NoBlocking;
+		TNT1 A -1;
+		stop;
+	Death:
+		FHGR A 0 
+		{
+		bNOGRAVITY = False;
+		}
+		FHGQ L 3 A_StartSound("Facehugger/Death",0);
+		FHGQ L 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE);
+		FHGQ M 15 A_NoBlocking;
+		FHGQ NMN 5;
+		FHGQ M 15;
+		FHGQ M -1;
+		stop;
+	Death.Hosted:
+		TNT1 A 1 A_NoBlocking;
+		TNT1 A -1;
+		stop;
+  }
+}
+
+Class XenoWarrior : Actor 
+{
+	Default
+	{
+	Tag "Xenomorph Warrior";
+	Health 450;
+	GibHealth -5;
+	Radius 20;
+	Height 35;
+	Mass 100;
+	Speed 10;
+	Meleerange 50;
+	PainChance 150;
+	PainChance "Acid", 0;
+	DamageFactor "Acid", 0;
+	PainChance "XENO", 0;
+	DamageFactor "XENO", 0;
+	Gravity 1.5;
+	Friction 1.0;
+	YScale 0.2;
+	XScale 0.22;
+	MaxDropoffHeight 500;
+	MaxStepHeight 256;
+	Species "Xenomorph";
+	FloatSpeed 50;
+	Monster;
+	BloodColor "Dark Green";
+	LightLevel 75;
+	+ADDLIGHTLEVEL
+	+SOLID
+	+SHOOTABLE
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+NOINFIGHTING
+	+SEEFRIENDLYMONSTERS
+	+QUICKTORETALIATE
+	+ALWAYSFAST
+	+THRUSPECIES
+	+THRUGHOST
+	+JUMPDOWN
+	+BLOCKASPLAYER
+	+FULLVOLSEE
+	+LOOKALLAROUND
+	+NOBLOCKMONST
+	+SHADOW
+	+JUMPDOWN
+	+NOVERTICALMELEERANGE
+	-NOGRAVITY
+	SeeSound "Alien/Active";
+	PainSound "Alien/Pain";
+	DeathSound "EMPTY/BLANK";
+	ActiveSound "Alien/Active";
+	HitObituary "You were murdered by a Xenomorph Warrior and consumed by the hive.";
+	Obituary "You were murdered by a Xenomorph Warrior and consumed by the hive.";
+	}
+	void A_Checksky()
+	{
+	if (TexMan.GetName(ceilingpic) == "F_SKY1")
+	setStatelabel("Idle.Jump");
+	return;
+	}
+	States
+	{
+	Spawn:
+		ALW2 R 1;
+		ALW2 R 1 ACS_NamedExecute("XenoAggro",0);
+		ALW2 R 3 A_AlertMonsters(1000);
+		ALW2 RST 3;
+		ALW1 A 3;
+		goto Idle;
+	Idle:
+		TNT1 A 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		ALW1 A 0 A_SetSpeed(15);
+		ALW1 B 0 A_JumpIf((ceilingz -z) <= 60,"Idle.IdleCont");
+		TNT1 A 0 A_SetSize(20,60);
+		ALW1 CDEF 3 {A_Wander();A_LookEx(0,0,1000,0,90,"See");}
+		ALW1 CDEF 3 {A_Wander();A_LookEx(0,0,1000,0,90,"See");}
+		ALW1 CDEF 3 {A_Wander();A_LookEx(0,0,1000,0,90,"See");}
+		ALW1 CDEF 3 {A_Wander();A_LookEx(0,0,1000,0,90,"See");}
+		ALW1 CDEF 3 {A_Wander();A_LookEx(0,0,1000,0,90,"See");}
+		ALW1 CDEF 3 {A_Wander();A_LookEx(0,0,1000,0,90,"See");}
+		ALW1 R 1 A_Jump(100,"Idle.JumpIdle");
+		loop;
+	Idle.JumpIdle:
+		ALW1 A 3 A_Jump(100,"See");
+		ALW1 A 1 A_SetSpeed(40);
+		ALW1 A 1
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = False;
+		}
+		ALW1 L 5 A_FaceTarget;
+		ALW1 B 0 A_StartSound("AlienQueen/Run",0);
+		ALW1 M 3 A_ChangeVelocity(40,0,0,CVF_RELATIVE);
+		ALW1 N 3 A_CustomMeleeAttack((8),"AlienQueen/THit","AlienQueen/TMiss");
+		ALW1 O 3 A_SetSize(20,20);
+		ALW1 PQ 3 A_SetSpeed(25);
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 R 1 A_Jump(256,"Melee.Jump");
+		Goto See;
+	Idle.IdleCont:
+		TNT1 A 0 A_SetSize(20,20);
+		ALW3 W 0 
+		{
+		bFRIGHTENED = True;
+		}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 RSTURSTU 3 {A_Wander();A_LookEx(0,0,1000,0,90,"Melee.Jump");}
+		ALW1 R 1 A_Jump(256,"Melee.Jump");
+		Goto See;
+	See: 
+		TNT1 A 0 
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = False;
+		}
+		TNT1 A 0 A_SetSize(20,60);
+		TNT1 A 0 A_JumpIfInventory("XenoGrow",1,"See.ComeBack");
+		ALW1 A 1 A_SetSpeed(25);
+		ALW1 A 0 A_Jump(110,"Idle.Creep");
+		ALW1 A 0 A_Jump(110,"Idle.Jump");
+		ALW1 A 0 A_Jump(100,"Idle.Tongue");
+		ALW1 A 0 A_Jump(100,"Idle.Tail");
+		loop;
+	See.ComeBack: 
+		TNT1 A 0 
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = False;
+		}
+		TNT1 A 0 A_TakeInventory("XenoGrow",7);
+		TNT1 A 0 A_SetSize(20,60);
+		ALW1 B 0 A_JumpIf((ceilingz -z) <= 60,"Idle.Jump");
+		ALW1 A 1 A_SetSpeed(30);
+		MSCH A 0 A_Jump(200,"Idle.Tongue");
+		MSCH A 0 A_Jump(200,"Idle.Tail");
+		MSCH A 0 A_Jump(100,"Idle.Jump");
+		MSCH A 0 A_Jump(100,"Idle.Creep");
+		loop;
+	Idle.Tongue:
+		ALW1 A 3 A_Jump(100,"See");
+		ALW1 ABC 3 A_Chase("Melee.Tongue",null);
+		ALW1 CDEF 3 A_Chase("Melee.Tongue",null);
+		ALW1 CDEF 3 A_Chase("Melee.Tongue",null);
+		ALW1 CDEF 3 A_Chase("Melee.Tongue",null);
+		ALW1 CDEF 3 A_Chase("Melee.Tongue",null);
+		ALW1 CDEF 3 A_Chase("Melee.Tongue",null);
+		ALW1 CDEF 3 A_Chase("Melee.Tongue",null);
+		ALW1 CBA 3;
+		Goto See;
+	Melee.Tongue:
+		ALW3 W 0 
+		{
+		bNOPAIN = False;
+		}
+		ALW1 BAGH 3;
+		ALW1 I 5 A_FaceTarget;
+		ALW1 J 1 A_StartSound("AlienQueen/Tongue",0,CVF_RELATIVE);
+		ALW1 J 3 {A_FaceTarget(); A_ChangeVelocity(5,0,0,CVF_RELATIVE);;}
+		ALW1 K 3 A_CustomMeleeAttack((20),"AlienQueen/THit","AlienQueen/TMiss","XENO");
+		ALW1 K 15;
+		ALW1 JIHGAB 3 A_FaceTarget;
+		Goto See;
+	Idle.Jump:
+		ALW1 A 3 A_Jump(100,"See");
+		ALW1 A 1 A_SetSpeed(40);
+		ALW1 A 1
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = False;
+		}
+		ALW1 L 5 A_FaceTarget;
+		ALW1 B 0 A_StartSound("AlienQueen/Run",0);
+		ALW1 M 3 A_ChangeVelocity(40,0,0,CVF_RELATIVE);
+		ALW1 N 3 A_CustomMeleeAttack((8),"AlienQueen/THit","AlienQueen/TMiss","XENO");
+		ALW1 O 3 A_SetSize(20,20);
+		ALW1 PQ 3 A_SetSpeed(25);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 R 1 A_Jump(256,"Melee.Jump");
+		Goto See;
+	Melee.JumpTO:
+		ALW1 P 15 A_FaceTarget;
+		ALW1 O 3 A_ChangeVelocity(10,0,0,CVF_RELATIVE);
+		ALW1 P 3 A_CustomMeleeAttack((4),"AlienQueen/THit","AlienQueen/TMiss");
+		ALW1 O 3;
+		ALW3 W 0 
+		{
+		bNOPAIN = False;
+		}
+		ALW1 B 0 A_JumpIf((ceilingz -z) <= 60,"Idle.JumpCont");
+		ALW1 QP 3 A_SetSpeed(3);
+		ALW1 VW 3 A_SetSize(20,60);
+		ALW1 WWW 10 A_Chase("Melee.Tail",null);
+		ALW1 XA 3;
+		goto See;
+	Melee.Jump:
+		ALW3 W 0 
+		{
+		bNOPAIN = False;
+		}
+		ALW1 B 0 A_JumpIf((ceilingz -z) <= 60,"Idle.JumpCont");
+		ALW1 QP 3 A_SetSpeed(3);
+		ALW1 VW 3 A_SetSize(20,60);
+		ALW1 WWW 10 A_Chase("Melee.Tail",null);
+		ALW1 XA 3;
+		goto See;
+	Idle.JumpCont:
+		ALW1 R 0 A_Jump(100,"Idle.JumpContA");
+		ALW3 W 0 
+		{
+		bFRIGHTENED = False;
+		}
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 R 1 A_Jump(256,"Melee.Jump");
+		Goto See;
+	Idle.JumpContA:
+		ALW3 W 0 
+		{
+		bFRIGHTENED = True;
+		}
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.JumpTO",null);
+		ALW1 R 1 A_Jump(256,"Melee.Jump");
+		Goto See;
+	Idle.Tail:
+		ALW1 A 3 A_Jump(100,"See");
+		ALW1 A 1 A_SetSpeed(0);
+		ALW1 A 1
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		ALW1 XW 3;
+		ALW1 WWW 7 A_Chase("Melee.Tail",null);
+		ALW1 XA 3;
+		goto See;
+	Melee.Tail:
+		ALW3 W 0 
+		{
+		bNOPAIN = False;
+		}
+		ALW1 YZ 3 {A_FaceTarget(); A_ChangeVelocity(5,0,0,CVF_RELATIVE);;}
+		ALW2 AB 3;
+		ALW2 C 3 A_SpawnProjectile("Tail2",50,0,0);
+		ALW2 DCBA 3;
+		ALW1 ZYX 3 A_SetSpeed(10);
+		goto See;
+	Idle.Creep:
+		ALW1 A 3 A_Jump(100,"See");
+		TNT1 A 0 A_CheckSky();
+		ALW1 A 1 A_SetSpeed(40);
+		ALW1 L 5 A_FaceTarget;
+		ALW1 M 3 A_StartSound("AlienQueen/Run",0);
+		ALW1 M 0 
+		{
+		bNOGRAVITY = TRUE;
+		}
+		ALW3 N 1 A_SetSize(20,20);
+		ALW3 N 3 A_ChangeVelocity(0,0,50);
+		ALW3 PQ 3 A_SetSpeed(25);
+		ALW3 R 1;
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 RSTURSTU 3 {A_Chase("Melee.Creep",null); A_ChangeVelocity(0,0,50);A_CheckSky();;}
+		ALW3 R 1 A_Jump(256,"Melee.Creep");
+		goto See;
+	Melee.Creep:
+		ALW3 W 0 
+		{
+		bNOPAIN = False;
+		}
+		ALW1 B 0 A_JumpIf((ceilingz -z) <= 60,"Idle.CreepCont");
+		ALW3 QP 3 A_SetSpeed(10);
+		ALW3 VW 3 A_SetSize(20,60);
+		ALW3 W 0 
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = False;
+		bFRIGHTENED = False;
+		}
+		ALW1 WXA 3;
+		MSCH A 0 A_Jump(256,"See.ComeBack");
+		goto See;
+	Idle.CreepCont:
+		ALW3 W 1 A_SetSpeed(40);
+		ALW3 W 0
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = False;
+		}
+		ALW3 N 3;
+		ALW1 B 0 A_StartSound("AlienQueen/Run",0);
+		ALW1 NO 3 A_SetSize(20,20);
+		ALW1 PQ 3 A_SetSpeed(25);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 3 A_Chase("Melee.Jump",null);
+		ALW1 R 1 A_Jump(256,"Melee.Jump");
+		Goto See;
+	Pain:
+		ALW2 O 0 A_GiveInventory("XenoGrow",1);
+		ALW2 O 0
+		{
+		bNOGRAVITY = False;
+		bNOPAIN = TRUE;
+		}
+		ALW2 EEEEEEEEEE 1 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE);
+		ALW2 E 1 {A_Pain();A_AlertMonsters(1000);}
+		ALW2 E 3 A_ChangeVelocity(-40,0,0,CVF_RELATIVE);
+		ALW2 EFGH 3;
+		ALW1 A 0 A_SetSpeed(40);
+		ALW2 E 0 A_SetSize(20,20);
+		ALW2 H 1 A_Explode((1),50);
+		ALW2 IJKLMNOPQ 3;
+		ALW2 O 0 A_Jump(256,"Idle.Pain");
+		goto See;
+	Idle.Pain:
+		ALW1 PQ 3 A_SetSpeed(25);
+		ALW2 O 0 
+		{
+		bNOGRAVITY = False;
+		bFRIGHTENED = TRUE;
+		}
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 RSTURSTU 2 A_Chase("Melee.Jump",null);
+		ALW1 R 1 A_Jump(256,"Melee.Jump");
+		Goto See;
+	Death:
+		ALW1 A 0 A_StartSound("AlienQueen/Death",0);
+		ALW1 A 0 A_StartSound("AlienQueen/Explode",0);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(30,60),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(20,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(20,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 1 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(30,60),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(20,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(20,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 1 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE);
+		TNT1 A 1 A_NoBlocking;
+		TNT1 A -1;
+		Stop;
+	}
+}
+
+Class CIVPedFemaleType1 : Actor
+{
+	Default
+	{
+	Tag "Civilian Female 1";
+	Health 5;
+	GibHealth -20;
+	Radius 20;
+	Height 40;
+	Mass 100;
+	Speed 15;
+	Meleerange 50;
+	MeleeDamage 1;
+	PainThreshold 1;
+	PainChance 256;
+	PainChance "Acid", 256;
+	DamageFactor 1;
+	Gravity 1.0;
+	Friction 1.0;
+	YScale 0.12;
+	XScale 0.14;
+	MaxDropoffHeight 30;
+	MaxStepHeight 30;
+	Species "CIVIL";
+	Monster;
+	BloodColor "Dark Red";
+	LightLevel 50;
+	+ADDLIGHTLEVEL
+	+SOLID
+	+SHOOTABLE
+	+THRUSPECIES
+	+FRIENDLY
+	+QUICKTORETALIATE
+	+GHOST
+	+BLOCKASPLAYER
+	+LOOKALLAROUND
+	+NOBLOCKMONST
+	+DONTHARMSPECIES
+	+NOINFIGHTING
+	+DONTFOLLOWPLAYERS
+	SeeSound "EMPTY/BLANK";
+	PainSound "EMPTY/BLANK";
+	DeathSound "EMPTY/BLANK";
+	ActiveSound "EMPTY/BLANK";
+	HitObituary "You were killed by an unarmed Housewife.";
+	Obituary "You were killed by an unarmed Housewife.";
+	}
+	override int DamageMobj (Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
+	{if (source && source.IsFriend(self))
+	{
+	return 0;
+	}
+	return super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+	}
+	States
+	{
+	Spawn:
+		CW11 AA 0;
+		TNT1 A 0 Thing_ChangeTID(0, 2);
+		CW11 A 1 A_Jump(256,"Spawn.Choose");
+		goto Idle;
+	Spawn.Choose:
+		TNT1 A 0 A_Jump(10,"Spawn.A");
+		TNT1 A 0 A_Jump(10,"Spawn.B");
+		TNT1 A 0 A_Jump(10,"Spawn.C");
+		Loop;
+	Spawn.A:
+		CW11 A 1 A_SetScale(0.115,0.12);
+		goto Idle;
+	Spawn.B:
+		CW11 A 1 A_SetScale(0.12,0.115);
+		goto Idle;
+	Spawn.C:
+		CW11 A 1 A_SetScale(0.125,0.11);
+		goto Idle;
+	Idle:
+		CW11 A 32 {A_SetSpeed(6);A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		CW11 AFG 3;
+		CW11 HIJKL 4 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		TNT1 A 0 A_CheckProximity("See.Panic","MeatCF",250,1,CPXF_SETTARGET|CPXF_CHECKSIGHT);
+		CW11 HIJKL 4 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		TNT1 A 0 A_CheckProximity("See.Panic","MeatCF",250,1,CPXF_SETTARGET|CPXF_CHECKSIGHT);
+		CW11 HIJKL 4 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		TNT1 A 0 A_CheckProximity("See.Panic","MeatCF",250,1,CPXF_SETTARGET|CPXF_CHECKSIGHT);
+		CW11 HIJKL 4 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		TNT1 A 0 A_CheckProximity("See.Panic","MeatCF",250,1,CPXF_SETTARGET|CPXF_CHECKSIGHT);
+		CW11 HIJKL 4 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		TNT1 A 0 A_CheckProximity("See.Panic","MeatCF",250,1,CPXF_SETTARGET|CPXF_CHECKSIGHT);
+		CW11 HIJKL 4 {A_Wander();A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		CW11 GFA 3;
+		CW11 A 10 A_CheckProximity("Idle.Chatter","CIVPedFemaleType1",100,1,CPXF_SETTARGET|CPXF_CHECKSIGHT);
+		TNT1 A 0 A_Jump(125,"Idle");
+		CW11 A 10 {A_SetSpeed(6);A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		TNT1 A 0 A_Jump(125,"Idle");
+		CW11 A 10 {A_SetSpeed(6);A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		TNT1 A 0 A_Jump(125,"Idle");
+		CW11 A 10 {A_SetSpeed(6);A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See.Panic");}
+		loop;
+	Idle.Chatter:
+		TNT1 A 0 A_Jump(250,"Idle.Wave");
+		CW11 A 10 A_FaceTarget;
+		TNT1 A 0 A_StartSound("Woman/Idle",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW11 ABCDE 4;
+		CW11 E 4;
+		CW11 EDCBA 4;
+		CW11 A 32 A_ClearTarget;
+		goto Idle;
+	Idle.Wave:
+		TNT1 A 0 A_Jump(100,"Idle");
+		CW11 A 10 A_FaceTarget;
+		CW11 ABCDE 4;
+		CW11 E 4;
+		CW11 EDCBA 4;
+		CW11 A 32 A_ClearTarget;
+		goto Idle;
+	See.Panic: 
+		TNT1 A 0
+		{
+		bFRIGHTENED = True;
+		}
+		CW11 M 25 A_Facetarget;
+		CW11 N 45 A_StartSound("Woman/Spot",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW11 OP 4;
+		TNT1 A 0 A_GiveInventory("Panic",1);
+		TNT1 A 0 A_SpawnProjectile("ShoeGibPink",40,0,RANDOM(-180,0),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnProjectile("ShoeGibPink",10,0,RANDOM(-60,60),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		CW11 Q 6;
+		TNT1 A 0 A_Jump(200,"Idle.ComeBack");
+		goto See;
+	See: 
+		CW11 RS 3;
+		TNT1 A 0
+		{
+		bFRIGHTENED = True;
+		}
+		TNT1 A 0 A_Jump(10,"Idle.Sneak");
+		TNT1 A 0 A_Jump(10,"Idle.Run");
+		TNT1 A 0 A_Jump(10,"Idle.Sob");
+		loop;
+	Idle.ComeBack: 
+		CW11 RS 3;
+		TNT1 A 0
+		{
+		bFRIGHTENED = True;
+		}
+		TNT1 A 0 A_Jump(200,"Idle.Run");
+		TNT1 A 0 A_Jump(50,"Idle.Sob");
+		TNT1 A 0 A_Jump(50,"Idle.Sneak");
+		loop;
+	Idle.Sneak:
+		TNT1 A 0 
+		{
+		bFRIGHTENED = True;
+		bDONTFOLLOWPLAYERS = False;
+		}
+		CW11 R 3 A_SetSpeed(10);
+		CW11 UVWTUVWT 3 A_Chase(null,"Melee.Sneak");
+		CW11 UVWTUVWT 3 A_Chase(null,"Melee.Sneak");
+		CW11 UVWTUVWT 3 A_Chase(null,"Melee.Sneak");
+		CW11 UVWTUVWT 3 A_Chase(null,"Melee.Sneak");
+		CW11 UVWTUVWT 3 A_Chase(null,"Melee.Sneak");
+		CW11 UVWTUVWT 3 A_Chase(null,"Melee.Sneak");
+		goto See;
+	Melee.Sneak:
+		TNT1 A 0 A_Jump(10,"Melee.Taunt");
+		CW11 X 20 A_Facetarget;
+		CW11 Y 50 A_StartSound("Woman/Spot",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW11 YXR 3;
+		TNT1 A 0 A_Jump(200,"Idle.ComeBack");
+		goto See;
+	Melee.Taunt:
+		CW12 A 3 A_Facetarget;
+		CW12 B 50 A_StartSound("Woman/Taunt",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 BA 3;
+		TNT1 A 0 A_Jump(200,"Idle.ComeBack");
+		goto See;
+	Idle.Run:
+		TNT1 A 0 
+		{
+		bFRIGHTENED = True;
+		bDONTFOLLOWPLAYERS = True;
+		}
+		CW12 C 3 A_SetSpeed(20);
+		CW12 DEFGDEFG 3 A_Chase(null,null);
+		CW12 DEFGDEFG 3 A_Chase(null,null);
+		CW12 DEFGDEFG 3 A_Chase(null,null);
+		CW12 DEFGDEFG 3 A_Chase(null,null);
+		CW12 DEFGDEFG 3 A_Chase(null,null);
+		CW12 DEFGDEFG 3 A_Chase(null,null);
+		CW12 H 3;
+		goto See;
+	Idle.Sob:
+		TNT1 A 0 
+		{
+		bFRIGHTENED = True;
+		bDONTFOLLOWPLAYERS = False;
+		}
+		CW11 R 3 A_SetSpeed(0);
+		CW11 RSRSRSRS 4 A_Chase(null,"Melee.Sneak");
+		CW11 RSRSRSRS 4 A_Chase(null,"Melee.Sneak");
+		CW11 RSRSRSRS 4 A_Chase(null,"Melee.Sneak");
+		CW11 X 24 A_Facetarget;
+		CW11 Y 40 A_StartSound("Woman/Sob",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW11 RSRSRSRS 4 A_Chase(null,"Melee.Sneak");
+		CW11 RSRSRSRS 4 A_Chase(null,"Melee.Sneak");
+		CW11 RSRSRSRS 4 A_Chase(null,"Melee.Sneak");
+		goto See;
+	Pain:
+		TNT1 A 0 A_JumpIfInventory("Panic",1,"Melee.Sneak");
+		TNT1 A 0 A_Jump(256,"See.Panic");
+		goto See;
+	Pain.HostQ:
+		FHGR A 0 A_CheckProximity("Idle.HostQ","FacehuggerQ",250,1,CPXF_SETTARGET);
+		goto See;
+	Idle.HostQ:
+		TNT1 A 0 
+		{
+		bFRIENDLY = False;
+		bMVISBLOCKED = True;
+		bNOTARGET = True;
+		}
+		TNT1 A 0 A_GiveInventory("Crawl1",1);
+		TNT1 A 0 A_KillTarget("Hosted");
+		CW12 O 1 A_StartSound("Woman/Facehugger",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 OP 10;
+		CW12 Q 1 A_SetSize(20,20);
+		CW12 Q 1 A_StartSound("KAISER/FALL",0);
+		CW12 Q 250;
+		TNT1 A 0 A_Jump(256,"Idle.Burst2");
+		loop;
+	Pain.Host:
+		FHGR A 0 A_CheckProximity("Idle.Host","Facehugger",250,1,CPXF_SETTARGET);
+		goto See;
+	Idle.Host:
+		TNT1 A 0 
+		{
+		bFRIENDLY = False;
+		bMVISBLOCKED = True;
+		bNOTARGET = True;
+		}
+		TNT1 A 0 A_GiveInventory("Crawl",1);
+		TNT1 A 0 A_KillTarget("Hosted");
+		CW12 L 1 A_StartSound("Woman/Facehugger",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 LM 10;
+		CW12 N 1 A_SetSize(20,20);
+		CW12 N 1 A_StartSound("KAISER/FALL",0);
+		CW12 N 250;
+		TNT1 A 0 A_Jump(256,"Idle.Burst");
+		loop;
+	Idle.Burst:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_GiveInventory("Burst",1);
+		TNT1 B 0 A_StartSound("XenomorphWarrior/Egg",0);
+		TNT1 B 0 A_SpawnItemEx("BursterWarrior",0,0,20,0,0,0,0,SXF_NOPOINTERS|SXF_NOCHECKPOSITION);
+		TNT1 A 0 A_SpawnProjectile("FacehuggerCarcas",20,0,RANDOM(30,70),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 B 0 A_Jump(256,"Death");
+		Stop;
+	Idle.Burst2:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_GiveInventory("Burst",1);
+		TNT1 B 0 A_StartSound("XenomorphWarrior/Egg",0);
+		TNT1 B 0 A_SpawnItemEx("BursterQueen",0,0,20,0,0,0,0,SXF_NOPOINTERS|SXF_NOCHECKPOSITION);
+		TNT1 A 0 A_SpawnProjectile("FacehuggerCarcasQ",20,0,RANDOM(30,70),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 B 0 A_Jump(256,"Death");
+		Stop;
+	Death:
+		TNT1 A 0 A_JumpIfInventory("Burst",1,"Death.CrawlBurst");
+		TNT1 A 0 A_JumpIfInventory("Crawl",1,"Death.Crawl");
+		TNT1 A 0 A_JumpIfInventory("Crawl1",1,"Death.CrawlQ");
+		TNT1 A 0 A_JumpIfInventory("Panic",1,"Death.Panic");
+		TNT1 A 0 A_NoBlocking;
+		TNT1 AA 0 A_SpawnProjectile("ShoeGibPink",10,0,RANDOM(-60,60),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		CW12 I 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 IJ 10;
+		CW12 K 1 A_StartSound("KAISER/FALL",0);
+		CW12 K 5 A_NoBlocking;
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 K -1;
+		Stop;
+	Death.Panic:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		CW12 I 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 IJ 10;
+		CW12 K 1 A_StartSound("KAISER/FALL",0);
+		CW12 K 5 A_NoBlocking;
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 K -1;
+		Stop;
+	Death.CrawlBurst:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat1",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat2",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserBloodSplat",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		CW12 K 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 K 5 A_NoBlocking;
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 K -1;
+		Stop;
+	Death.Crawl:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("FacehuggerCarcas",20,0,RANDOM(30,70),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat1",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat2",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserBloodSplat",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		CW12 K 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 K 5 A_NoBlocking;
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 K -1;
+		Stop;
+	Death.CrawlQ:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("FacehuggerCarcasQ",20,0,RANDOM(30,70),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat1",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnProjectile("KaiserMeat2",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserBloodSplat",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		CW12 K 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 K 5 A_NoBlocking;
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 K -1;
+		Stop;
+	XDeath:
+		TNT1 A 0 A_JumpIfInventory("Burst",1,"XDeath.CrawlBurst");
+		TNT1 A 0 A_JumpIfInventory("Crawl",1,"XDeath.Crawl");
+		TNT1 A 0 A_JumpIfInventory("Crawl1",1,"XDeath.CrawlQ");
+		TNT1 A 0 A_JumpIfInventory("Panic",1,"XDeath.Panic");
+		TNT1 A 0 A_NoBlocking;
+		TNT1 AA 0 A_SpawnProjectile("ShoeGibPink",10,0,RANDOM(-60,60),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnProjectile("CIVPedFemaleType1Torso",50,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat3",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat4",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 T 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 T 10;
+		CW12 U 1 A_StartSound("KAISER/FALL",0);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U -1;
+		Stop;
+	XDeath.Panic:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("CIVPedFemaleType1Torso",50,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat3",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat4",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 T 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		CW12 T 10;
+		CW12 U 1 A_StartSound("KAISER/FALL",0);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U -1;
+		Stop;
+	XDeath.CrawlBurst:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("CIVPedFemaleType1Torso",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat1",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat2",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAA 0 A_SpawnProjectile("KaiserBloodSplat",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat3",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat4",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U -1;
+		Stop;
+	XDeath.Crawl:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("FacehuggerCarcas",20,0,RANDOM(30,70),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnProjectile("CIVPedFemaleType1Torso",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat1",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat2",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAA 0 A_SpawnProjectile("KaiserBloodSplat",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat3",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat4",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U -1;
+		Stop;
+	XDeath.CrawlQ:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 A 0 A_SpawnProjectile("FacehuggerCarcasQ",20,0,RANDOM(30,70),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnProjectile("CIVPedFemaleType1Torso",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat1",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat2",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAA 0 A_SpawnProjectile("KaiserBloodSplat",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat3",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAA 0 A_SpawnProjectile("KaiserMeat4",10,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U 1 A_StartSound("Woman/Pain",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 U -1;
+		Stop;
+	Death.Acid:
+		TNT1 A 0 A_JumpIfInventory("Panic",1,"Death.AcidPanic");
+		TNT1 A 0 A_NoBlocking;
+		TNT1 AA 0 A_SpawnProjectile("ShoeGibPink",10,0,RANDOM(-60,60),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat3",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat4",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),0,0,0,SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V 1 A_StartSound("Woman/Burning",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V -1;
+		Stop;
+	Death.AcidPanic:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat3",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat4",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAAAAAAAAAAA 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-1,1),SXF_CLIENTSIDE);
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V 1 A_StartSound("Woman/Burning",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V -1;
+		Stop;
+	Death.Fire:
+		TNT1 A 0 A_JumpIfInventory("Panic",1,"Death.FirePanic");
+		TNT1 A 0 A_NoBlocking;
+		TNT1 AA 0 A_SpawnProjectile("ShoeGibPink",10,0,RANDOM(-60,60),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat3",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat4",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnItemEx("BigFireGib",0,0,25);
+		0NC1 AAAAAAAAA 0 A_SpawnProjectile("FireSpit",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V 1 A_StartSound("Woman/Burning",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V -1;
+		Stop;
+	Death.FirePanic:
+		TNT1 A 0 A_NoBlocking;
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat1",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat2",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AA 0 A_SpawnProjectile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat3",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 AAA 0 A_SpawnProjectile("KaiserMeat4",45,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH|CMF_AIMDIRECTION,45);
+		TNT1 A 0 A_SpawnItemEx("BigFireGib",0,0,25);
+		0NC1 AAAAAAAAA 0 A_SpawnProjectile("FireSpit",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,RANDOM(0,70));
+		TNT1 A 0 A_SpawnItemEx("MeatCF",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V 1 A_StartSound("Woman/Burning",0,CHANF_DEFAULT,1,ATTN_IDLE,1.15);
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0);
+		CW12 V -1;
+		Stop;
+  }
+}

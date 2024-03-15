@@ -1,0 +1,89 @@
+
+
+pointlight REDLIGHT
+{
+	color 1.0 0.0 0.0
+	size 40
+	dontlightself 1
+}
+pointlight GREENLIGHT
+{
+	color 0.0 1.0 0.0
+	size 40
+	dontlightself 1
+}
+pointlight BLUELIGHT
+{
+	color 0.0 0.0 1.0
+	size 40
+	dontlightself 1
+}
+pointlight PURPLELIGHT
+{
+	color 0.75 0.0 0.75
+	size 40
+	dontlightself 1
+}
+
+pointlight DIMREDLIGHT
+{
+	color 1.0 0.0 0.0
+	size 20
+	dontlightself 1
+}
+pointlight DIMGREENLIGHT
+{
+	color 0.0 1.0 0.0
+	size 20
+	dontlightself 1
+}
+pointlight DIMBLUELIGHT
+{
+	color 0.0 0.0 1.0
+	size 20
+	dontlightself 1
+}
+pointlight DIMPURPLELIGHT
+{
+	color 0.75 0.0 0.75
+	size 20
+	dontlightself 1
+}
+
+pulselight REDPULSE
+{
+	color 1.0 0.0 0.0
+	size 50
+	secondarySize 60
+	interval 1.5
+	dontlightself 1
+}
+pulselight GREENPULSE
+{
+	color 0.0 1.0 0.0
+	size 50
+	secondarySize 60
+	interval 1.5
+	dontlightself 1
+}
+pulselight BLUEPULSE
+{
+	color 0.0 0.0 1.0
+	size 50
+	secondarySize 60
+	interval 1.5
+	dontlightself 1
+}
+pulselight PURPLEPULSE
+{
+	color 0.75 0.0 0.75
+	size 50
+	secondarySize 60
+	interval 1.5
+	dontlightself 1
+}
+
+
+
+
+

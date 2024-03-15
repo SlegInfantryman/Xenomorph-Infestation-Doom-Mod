@@ -1,0 +1,23 @@
+
+#library "XI"
+#include "zcommon.acs"
+
+script "XenoAggro" (void)
+{
+Thing_Hate(0, 2, 4);
+ Thing_ChangeTID(0,3);
+}
+
+script "RemoveSleg" (void)
+{
+	Thing_Remove(88);
+}
+
+script 1 ENTER
+{
+ GiveInventory("Allmap",1);
+ SetActorProperty(0,APROP_Species,"CIVIL");
+ SetActorFlag(0, "THRUSPECIES", TRUE);
+ delay (1);
+ Thing_ChangeTID(0,2);
+}

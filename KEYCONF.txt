@@ -1,0 +1,17 @@
+clearplayerclasses
+addplayerclass "ArmySpecialForces"
+
+weaponsection MyNewWeapons
+setslot 1 
+setslot 2 
+setslot 3 M16
+addslotdefault 3 M16
+setslot 4 M60
+addslotdefault 4 M60
+setslot 5 
+addslotdefault 5 
+setslot 6
+setslot 7
+setslot 8
+setslot 9 
+addslotdefault 9 

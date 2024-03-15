@@ -1,0 +1,194 @@
+gameinfo
+{
+}
+
+/* --- DIFFICULTY SETUP -------------------------------------------------------- */
+
+/* --- EPISODE SETUP -------------------------------------------------------- */
+
+
+DoomEdNums
+{
+6664 = XenoWarrior
+6671 = CIVPedFemaleType1
+}
+
+clearskills
+
+skill Easy
+{
+AmmoFactor= 5.0
+DamageFactor= 1
+RespawnTime= 0
+RespawnLimit= 0
+Aggressiveness= 2
+Key= 1
+Name= "Xeno Hunt Easy"
+TextColor= "Green"
+MonsterHealth= 1.0
+FriendlyHealth= 1.0
+HealthFactor= 1
+SpawnFilter = Easy
+ReplaceActor = "HealthBonus","CIVPedFemaleType1"
+ReplaceActor = "ArmorBonus","CIVPedFemaleType1"
+ReplaceActor = "GreenArmor","CIVPedFemaleType1"
+ReplaceActor = "Stimpack","CIVPedFemaleType1"
+ReplaceActor = "Medikit","CIVPedFemaleType1"
+ReplaceActor = "Soulsphere","CIVPedFemaleType1"
+
+ReplaceActor = "Cell","CIVPedFemaleType1"
+ReplaceActor = "CellPack","CIVPedFemaleType1"
+ReplaceActor = "Clip","CIVPedFemaleType1"
+ReplaceActor = "ClipBox","CIVPedFemaleType1"
+ReplaceActor = "RocketAmmo","CIVPedFemaleType1"
+ReplaceActor = "RocketBox","CIVPedFemaleType1"
+ReplaceActor = "Shell","CIVPedFemaleType1"
+ReplaceActor = "Shellbox","CIVPedFemaleType1"
+
+ReplaceActor = "Allmap","CIVPedFemaleType1"
+ReplaceActor = "Blursphere","CIVPedFemaleType1"
+ReplaceActor = "Infered","CIVPedFemaleType1"
+
+ReplaceActor = "Zombieman","CIVPedFemaleType1"
+ReplaceActor = "DoomImp","CIVPedFemaleType1"
+ReplaceActor = "ShotgunGuy","CIVPedFemaleType1"
+ReplaceActor = "Demon","CIVPedFemaleType1"
+ReplaceActor = "Spectre","CIVPedFemaleType1"
+ReplaceActor = "ChaingunGuy","CIVPedFemaleType1"
+ReplaceActor = "LostSoul","CIVPedFemaleType1"
+ReplaceActor = "WolfensteinSS","CIVPedFemaleType1"
+ReplaceActor = "Cacodemon","CIVPedFemaleType1"
+ReplaceActor = "PainElemental","CIVPedFemaleType1"
+ReplaceActor = "Arachnotron","CIVPedFemaleType1"
+ReplaceActor = "HellKnight","CIVPedFemaleType1"
+
+ReplaceActor = "BlueArmor","XEGGQ"
+ReplaceActor = "Berserk","XEGGQ"
+
+ReplaceActor = "MegasphereHealth","XEGGQ"
+ReplaceActor = "BaronOfHell","XenoWarrior"
+ReplaceActor = "Fatso","XenoWarrior"
+ReplaceActor = "Revenant","XenoWarrior"
+ReplaceActor = "Archvile","AlienQueen"
+ReplaceActor = "SpiderMastermind","AlienQueen"
+ReplaceActor = "Cyberdemon","AlienQueen"
+}
+
+skill Normal
+{
+AmmoFactor= 5.0
+DamageFactor= 1
+RespawnTime= 0
+RespawnLimit= 0
+Aggressiveness= 2
+Key= 2
+Name= "Xeno Hunt Normal"
+TextColor= "Blue"
+MonsterHealth= 1.0
+FriendlyHealth= 1.0
+DefaultSkill
+HealthFactor= 1
+SpawnFilter = Normal
+ReplaceActor = "HealthBonus","CIVPedFemaleType1"
+ReplaceActor = "ArmorBonus","CIVPedFemaleType1"
+ReplaceActor = "GreenArmor","CIVPedFemaleType1"
+ReplaceActor = "Stimpack","CIVPedFemaleType1"
+ReplaceActor = "Medikit","CIVPedFemaleType1"
+ReplaceActor = "Soulsphere","CIVPedFemaleType1"
+
+ReplaceActor = "Cell","CIVPedFemaleType1"
+ReplaceActor = "CellPack","CIVPedFemaleType1"
+ReplaceActor = "Clip","CIVPedFemaleType1"
+ReplaceActor = "ClipBox","CIVPedFemaleType1"
+ReplaceActor = "RocketAmmo","CIVPedFemaleType1"
+ReplaceActor = "RocketBox","CIVPedFemaleType1"
+ReplaceActor = "Shell","CIVPedFemaleType1"
+ReplaceActor = "Shellbox","CIVPedFemaleType1"
+
+ReplaceActor = "Allmap","CIVPedFemaleType1"
+ReplaceActor = "Blursphere","CIVPedFemaleType1"
+ReplaceActor = "Infered","CIVPedFemaleType1"
+
+ReplaceActor = "Zombieman","CIVPedFemaleType1"
+ReplaceActor = "DoomImp","CIVPedFemaleType1"
+ReplaceActor = "ShotgunGuy","CIVPedFemaleType1"
+ReplaceActor = "Demon","CIVPedFemaleType1"
+ReplaceActor = "Spectre","CIVPedFemaleType1"
+ReplaceActor = "ChaingunGuy","CIVPedFemaleType1"
+ReplaceActor = "LostSoul","CIVPedFemaleType1"
+ReplaceActor = "WolfensteinSS","CIVPedFemaleType1"
+ReplaceActor = "Cacodemon","CIVPedFemaleType1"
+ReplaceActor = "PainElemental","CIVPedFemaleType1"
+ReplaceActor = "Arachnotron","CIVPedFemaleType1"
+ReplaceActor = "HellKnight","CIVPedFemaleType1"
+
+ReplaceActor = "BlueArmor","XEGGQ"
+ReplaceActor = "Berserk","XEGGQ"
+
+ReplaceActor = "MegasphereHealth","XEGGQ"
+ReplaceActor = "BaronOfHell","XenoWarrior"
+ReplaceActor = "Fatso","XenoWarrior"
+ReplaceActor = "Revenant","XenoWarrior"
+ReplaceActor = "Archvile","AlienQueen"
+ReplaceActor = "SpiderMastermind","AlienQueen"
+ReplaceActor = "Cyberdemon","AlienQueen"
+}
+
+skill Hard
+{
+AmmoFactor= 5.0
+DamageFactor= 1
+RespawnTime= 0
+RespawnLimit= 0
+Aggressiveness= 2
+Key= 3
+Name= "Xeno Hunt Hard"
+TextColor= "Red"
+MonsterHealth= 1.0
+FriendlyHealth= 1.0
+HealthFactor= 1
+SpawnFilter = Hard
+ReplaceActor = "HealthBonus","CIVPedFemaleType1"
+ReplaceActor = "ArmorBonus","CIVPedFemaleType1"
+ReplaceActor = "GreenArmor","CIVPedFemaleType1"
+ReplaceActor = "Stimpack","CIVPedFemaleType1"
+ReplaceActor = "Medikit","CIVPedFemaleType1"
+ReplaceActor = "Soulsphere","CIVPedFemaleType1"
+
+ReplaceActor = "Cell","CIVPedFemaleType1"
+ReplaceActor = "CellPack","CIVPedFemaleType1"
+ReplaceActor = "Clip","CIVPedFemaleType1"
+ReplaceActor = "ClipBox","CIVPedFemaleType1"
+ReplaceActor = "RocketAmmo","CIVPedFemaleType1"
+ReplaceActor = "RocketBox","CIVPedFemaleType1"
+ReplaceActor = "Shell","CIVPedFemaleType1"
+ReplaceActor = "Shellbox","CIVPedFemaleType1"
+
+ReplaceActor = "Allmap","CIVPedFemaleType1"
+ReplaceActor = "Blursphere","CIVPedFemaleType1"
+ReplaceActor = "Infered","CIVPedFemaleType1"
+
+ReplaceActor = "Zombieman","CIVPedFemaleType1"
+ReplaceActor = "DoomImp","CIVPedFemaleType1"
+ReplaceActor = "ShotgunGuy","CIVPedFemaleType1"
+ReplaceActor = "Demon","CIVPedFemaleType1"
+ReplaceActor = "Spectre","CIVPedFemaleType1"
+ReplaceActor = "ChaingunGuy","CIVPedFemaleType1"
+ReplaceActor = "LostSoul","CIVPedFemaleType1"
+ReplaceActor = "WolfensteinSS","CIVPedFemaleType1"
+ReplaceActor = "Cacodemon","CIVPedFemaleType1"
+ReplaceActor = "PainElemental","CIVPedFemaleType1"
+ReplaceActor = "Arachnotron","CIVPedFemaleType1"
+ReplaceActor = "HellKnight","CIVPedFemaleType1"
+
+ReplaceActor = "BlueArmor","XEGGQ"
+ReplaceActor = "Berserk","XEGGQ"
+
+ReplaceActor = "MegasphereHealth","XEGGQ"
+ReplaceActor = "BaronOfHell","XenoWarrior"
+ReplaceActor = "Fatso","XenoWarrior"
+ReplaceActor = "Revenant","XenoWarrior"
+ReplaceActor = "Archvile","AlienQueen"
+ReplaceActor = "SpiderMastermind","AlienQueen"
+ReplaceActor = "Cyberdemon","AlienQueen"
+}

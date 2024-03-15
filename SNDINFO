@@ -1,0 +1,509 @@
+// PLAYER
+
+$playersound	SPECTATOR male    *death     DEDSPC 
+$playersound	SPECTATOR male    *xdeath     DEDSPC
+$playersound	SPECTATOR male    *gibbed     DEDSPC
+$playersound	SPECTATOR male    *pain100     DEDSPC
+$playersound	SPECTATOR male    *pain75     DEDSPC
+$playersound	SPECTATOR male    *pain50     DEDSPC
+$playersound	SPECTATOR male    *pain25     DEDSPC
+$playersound	SPECTATOR male    *grunt     DEDSPC
+$playersound	SPECTATOR male    *land     DEDSPC
+$playersound	SPECTATOR male    *jump     DEDSPC
+$playersound	SPECTATOR male    *fist     DEDSPC
+$playersound	SPECTATOR male    *usefail     DEDSPC
+
+
+// XENOMORPH QUEEN
+
+$random AlienQueen/active	{ AlienQueen/active1 AlienQueen/active2 AlienQueen/active3 AlienQueen/active4 AlienQueen/active5 }
+$random AlienQueen/Claw { AlienQueen/Claw1	AlienQueen/Claw2 }
+$random AlienQueen/ClawM { AlienQueen/ClawM1	AlienQueen/ClawM2 }
+$random AlienQueen/Run	{ AlienQueen/Run1 AlienQueen/Run2 AlienQueen/Run3 }
+$random AlienQueen/Spit { AlienQueen/Spit1	AlienQueen/Spit2 }
+$random AlienQueen/Taunt { AlienQueen/Taunt1	AlienQueen/Taunt2 }
+$random AlienQueen/Death { AlienQueen/Death1	AlienQueen/Death2	AlienQueen/Death3	AlienQueen/Death4	AlienQueen/Death5	AlienQueen/Death6	AlienQueen/Death7	AlienQueen/Death8	AlienQueen/Death9 }
+$random AlienQueen/Blood	{ AlienQueen/Blood1 AlienQueen/Blood2 AlienQueen/Blood3 AlienQueen/Blood4 }
+$random AlienQueen/Pain	{ AlienQueen/Pain1 AlienQueen/Pain2 AlienQueen/Pain3 AlienQueen/Pain4 AlienQueen/Pain5 }
+AlienQueen/active1		ALAMB1
+AlienQueen/active2		ALAMB2
+AlienQueen/active3		ALAMB3
+AlienQueen/active4		ALAMB4
+AlienQueen/active5		ALAMB5
+AlienQueen/FootStep		ALQNFT
+AlienQueen/Claw1		ALCLA1
+AlienQueen/Claw2		ALCLA2
+AlienQueen/ClawM1		ALCLM1
+AlienQueen/ClawM2		ALCLM2
+AlienQueen/Run1		ALRUN1
+AlienQueen/Run2		ALRUN2
+AlienQueen/Run3		ALRUN3
+AlienQueen/Tongue		ALTONG
+AlienQueen/THit		ALTONH
+AlienQueen/TMiss		ALTONM
+AlienQueen/Spit		ASPIT1
+AlienQueen/Spit2		ASPIT2
+AlienQueen/Tail		ATAIL1
+AlienQueen/TailHit		ATAILH
+AlienQueen/Taunt1		ALTAU1
+AlienQueen/Taunt2		ALTAU2
+AlienQueen/Death1		ALDEA1
+AlienQueen/Death2		ALDEA2
+AlienQueen/Death3		ALDEA3
+AlienQueen/Death4		ALDEA4
+AlienQueen/Death5		ALDEA5
+AlienQueen/Death6		ALDEA6
+AlienQueen/Death7		ALDEA7
+AlienQueen/Death8		ALDEA8
+AlienQueen/Death9		ALDEA9
+AlienQueen/Explode		ALEXP1
+AlienQueen/Fall		AFALL1
+AlienQueen/Blood1		ALBL01
+AlienQueen/Blood2		ALBL02
+AlienQueen/Blood3		ALBL03
+AlienQueen/Blood4		ALBL04
+AlienQueen/Pain1		APAIN1
+AlienQueen/Pain2		APAIN2
+AlienQueen/Pain3		APAIN3
+AlienQueen/Pain4		APAIN4
+AlienQueen/Pain5		APAIN5
+
+$random Alien/active	{ AlienQueen/active1 AlienQueen/active2 AlienQueen/active5 AlienQueen/Taunt1	AlienQueen/Taunt2 }
+$random Alien/Pain	{ AlienQueen/Pain1 AlienQueen/Pain2 AlienQueen/Pain3 AlienQueen/Pain4 AlienQueen/Pain5 }
+
+// XENOMORPH FACEHUGGER
+
+$random Facehugger/Run	{ Facehugger/Run1 Facehugger/Run2 Facehugger/Run3 Facehugger/Run4 Facehugger/Run5 }
+$random Facehugger/Idle	{ Facehugger/Idle1 Facehugger/Idle2 }
+$random Facehugger/Screech	{ Facehugger/Screech1 Facehugger/Screech2 }
+$random Facehugger/Tail	{ Facehugger/Tail1 Facehugger/Tail2 Facehugger/Tail3 Facehugger/Tail4 Facehugger/Tail5 }
+$random Facehugger/Death	{ Facehugger/Death1 Facehugger/Death2 Facehugger/Death3 }
+
+Facehugger/Run1		FHGFS1
+Facehugger/Run2		FHGFS2
+Facehugger/Run3		FHGFS3
+Facehugger/Run4		FHGFS4
+Facehugger/Run5		FHGFS5
+Facehugger/Idle1		FHGID1
+Facehugger/Idle2		FHGID2
+Facehugger/Egg		XEGGOP
+Facehugger/Screech1		FHGSC1
+Facehugger/Screech2		FHGSC2
+Facehugger/Tail1		FHGTL1
+Facehugger/Tail2		FHGTL2
+Facehugger/Tail3		FHGTL3
+Facehugger/Tail4		FHGTL4
+Facehugger/Tail5		FHGTL5
+Facehugger/Death1		FHGDT1
+Facehugger/Death2		FHGDT2
+Facehugger/Death3		FHGDT3
+
+ZOMBIE/HD1		SMZHD1
+ZOMBIE/HD2		SMZHD2
+ZOMBIE/HD3		SMZHD3
+ZOMBIE/F1		SMZFL1
+ZOMBIE/F2		SMZFL2
+ZOMBIE/F3		SMZFL3
+ZOMBIE/F4		SMZFL4
+ZOMBIE/F5		SMZFL5
+ZOMBIE/F6		SMZFL6
+ZOMBIE/F7		SMZFL7
+ZOMBIE/F8		SMZFL8
+ZOMBIE/F9		SMZFL9
+ZOMBIE/HL1		SMZHL1
+ZOMBIE/HL2		SMZHL2
+ZOMBIE/FS1		SMZF01
+ZOMBIE/FS2		SMZF02
+ZOMBIE/FS3		SMZF03
+ZOMBIE/FS4		SMZF04
+ZOMBIE/FS5		SMZF05
+ZOMBIE/FS6		SMZF06
+ZOMBIE/FS7		SMZF07
+ZOMBIE/FS8		SMZF08
+ZOMBIE/FS9		SMZF09
+ZOMBIE/FS10		SMZF10
+ZOMBIE/BH1		SMZBH1
+ZOMBIE/BH2		SMZBH2
+ZOMBIE/BH3		SMZBH3
+ZOMBIE/BH4		SMZBH4
+ZOMBIE/BH5		SMZBH5
+
+EMPTY/BLANK		DEDSPC
+KAISER/ST1		GESST1
+KAISER/ST2		GESST2
+KAISER/ST3		GESST3
+KAISER/S1		GESSE1
+KAISER/S2		GESSE2
+KAISER/S3		GESSE3
+KAISER/S4		GESSE4
+KAISER/S5		GESSE5
+KAISER/R1		GESRL1
+KAISER/R2		GESRL2
+KAISER/R3		GESRL3
+KAISER/R4		GESRL4
+KAISER/D1		GESDT1
+KAISER/D2		GESDT2
+KAISER/D3		GESDT3
+KAISER/D4		GESDT4
+KAISER/D5		GESDT5
+KAISER/D6		GESDT6
+KAISER/D7		GESDT7
+KAISER/F1		GESFW1
+KAISER/F2		GESFW2
+KAISER/F3		GESFW3
+KAISER/F4		GESFW4
+KAISER/HD1		GESHD1
+KAISER/HD2		GESHD2
+KAISER/H1		GESHP1
+KAISER/H2		GESHP2
+KAISER/H3		GESHP3
+KAISER/H4		GESHP4
+KAISER/H5		GESHP5
+KAISER/H6		GESHP6
+KAISER/H7		GESHP7
+KAISER/PIN		GESPIN
+KAISER/PMG		GESPMG
+KAISER/PSN		GESPSN
+KAISER/WHS		GESWHS
+
+GEWEHR98/FIRE		G98FIR
+GEWEHR98/BOP		G98BOP
+GEWEHR98/BCL		G98BCL
+GEWEHR98/RELOAD		G98SCR
+GEWEHR98/BCLR		G98BCR
+
+$random C96/FIRE { C96/F1	C96/F2	C96/F3 }
+C96/F1		C96FI1
+C96/F2		C96FI2
+C96/F3		C96FI3
+C96/BBK		C96BBK
+C96/RELOAD		C96BIN
+C96/CLIPIN		C96CIN
+C96/CLIPOUT		C96COU
+
+$random 308/L { 308/L1	308/L2	308/L3 }
+308/L1		40CAS1
+308/L2		40CAS2
+308/L3		40CAS3
+
+$random BULLET/R { BULLET/R1	BULLET/R2	BULLET/R3	BULLET/R4	BULLET/R5	BULLET/R6	BULLET/R7 }
+BULLET/R1		RICOCHE1
+BULLET/R2		RICOCHE2
+BULLET/R3		RICOCHE3
+BULLET/R4		RICOCHE4
+BULLET/R5		RICOCHE5
+BULLET/R6		RICOCHE6
+BULLET/R7		RICOCHE7
+BULLET/R8		IMPACT
+
+
+//Civil Allies
+
+$random Woman/Burning	{ Woman/Burning1 Woman/Burning2 Woman/Burning3 }
+Woman/Burning1		CF1PB1
+Woman/Burning2		CF1PB2
+Woman/Burning3		CF1PB3
+$random Woman/Car	{ Woman/Car1 Woman/Car2 }
+Woman/Car1		CF1C01
+Woman/Car2		CF1C02
+$random Woman/Facehugger	{ Woman/Facehugger1 Woman/Facehugger2 Woman/Facehugger3 }
+Woman/Facehugger1		CF1PF1
+Woman/Facehugger2		CF1PF2
+Woman/Facehugger3		CF1PF3
+$random Woman/Idle	{ Woman/Idle1 Woman/Idle2 Woman/Idle3 Woman/Idle4 Woman/Idle5 Woman/Idle6 Woman/Idle7 Woman/Idle8 Woman/Idle9 Woman/Idle10 Woman/Idle11 Woman/Idle12 Woman/Idle13 Woman/Idle14 Woman/Idle15 }
+Woman/Idle1		CF1I01
+Woman/Idle2		CF1I02
+Woman/Idle3		CF1I03
+Woman/Idle4		CF1I04
+Woman/Idle5		CF1I05
+Woman/Idle6		CF1I06
+Woman/Idle7		CF1I07
+Woman/Idle8		CF1I08
+Woman/Idle9		CF1I09
+Woman/Idle10		CF1I10
+Woman/Idle11		CF1I11
+Woman/Idle12		CF1I12
+Woman/Idle13		CF1I13
+Woman/Idle14		CF1I14
+Woman/Idle15		CF1I15
+$random Woman/Pain	{ Woman/Pain1 Woman/Pain2 Woman/Pain3 Woman/Pain4 Woman/Pain5 Woman/Pain6 Woman/Pain7 Woman/Pain8 Woman/Pain9 Woman/Pain10 Woman/Pain11 Woman/Pain12 Woman/Pain13 Woman/Pain14 Woman/Pain15 Woman/Pain16 Woman/Pain17 Woman/Pain18 }
+Woman/Pain1		CF1P01
+Woman/Pain2		CF1P02
+Woman/Pain3		CF1P03
+Woman/Pain4		CF1P04
+Woman/Pain5		CF1P05
+Woman/Pain6		CF1P06
+Woman/Pain7		CF1P07
+Woman/Pain8		CF1P08
+Woman/Pain9		CF1P09
+Woman/Pain10		CF1P10
+Woman/Pain11		CF1P11
+Woman/Pain12		CF1P12
+Woman/Pain13		CF1P13
+Woman/Pain14		CF1P14
+Woman/Pain15		CF1P15
+Woman/Pain16		CF1P16
+Woman/Pain17		CF1P17
+Woman/Pain18		CF1P18
+Woman/Player		CF1PL1
+$random Woman/Sob	{ Woman/Sob1 Woman/Sob2 Woman/Sob3 Woman/Sob4 Woman/Sob5 Woman/Sob6 Woman/Sob7 Woman/Sob8 Woman/Sob9 Woman/Sob10 Woman/Sob11 Woman/Sob12 Woman/Sob13 Woman/Sob14 Woman/Sob15 Woman/Sob16 Woman/Sob17 Woman/Sob18 Woman/Sob19 Woman/Sob20 }
+Woman/Sob1		CF1S01
+Woman/Sob2		CF1S02
+Woman/Sob3		CF1S03
+Woman/Sob4		CF1S04
+Woman/Sob5		CF1S05
+Woman/Sob6		CF1S06
+Woman/Sob7		CF1S07
+Woman/Sob8		CF1S08
+Woman/Sob9		CF1S09
+Woman/Sob10		CF1S10
+Woman/Sob11		CF1S11
+Woman/Sob12		CF1S12
+Woman/Sob13		CF1S13
+Woman/Sob14		CF1S14
+Woman/Sob15		CF1S15
+Woman/Sob16		CF1S16
+Woman/Sob17		CF1S17
+Woman/Sob18		CF1S18
+Woman/Sob19		CF1S19
+Woman/Sob20		CF1S20
+$random Woman/Spot	{ Woman/Spot1 Woman/Spot2 Woman/Spot3 Woman/Spot4 Woman/Spot5 Woman/Spot6 Woman/Spot7 Woman/Spot8 Woman/Spot9 Woman/Spot10 Woman/Spot11 Woman/Spot12 Woman/Spot13 Woman/Spot14 Woman/Spot15 Woman/Spot16 Woman/Spot17 Woman/Spot18 Woman/Spot19 Woman/Spot20 Woman/Spot21 Woman/Spot22 Woman/Spot23 Woman/Spot24 Woman/Spot25 }
+Woman/Spot1		CF1S01
+Woman/Spot2		CF1S02
+Woman/Spot3		CF1S03
+Woman/Spot4		CF1S04
+Woman/Spot5		CF1S05
+Woman/Spot6		CF1S06
+Woman/Spot7		CF1S07
+Woman/Spot8		CF1S08
+Woman/Spot9		CF1S09
+Woman/Spot10		CF1S10
+Woman/Spot11		CF1S11
+Woman/Spot12		CF1S12
+Woman/Spot13		CF1S13
+Woman/Spot14		CF1S14
+Woman/Spot15		CF1S15
+Woman/Spot16		CF1S16
+Woman/Spot17		CF1S17
+Woman/Spot18		CF1S18
+Woman/Spot19		CF1S19
+Woman/Spot20		CF1S20
+Woman/Spot21		CF1S16
+Woman/Spot22		CF1S17
+Woman/Spot23		CF1S18
+Woman/Spot24		CF1S19
+Woman/Spot25		CF1S20
+$random Woman/Taunt	{ Woman/Taunt1 Woman/Taunt2 Woman/Taunt3 Woman/Taunt4 }
+Woman/Taunt1		CF1T01
+Woman/Taunt2		CF1T02
+Woman/Taunt3		CF1T03
+Woman/Taunt4		CF1T04
+$random Man/Burning	{ Man/Burning1 Man/Burning2 Man/Burning3 }
+Man/Burning1		CM1PB1
+Man/Burning2		CM1PB2
+Man/Burning3		CM1PB3
+$random Man/Sob	{ Man/Sob1 Man/Sob2 Man/Sob3 Man/Sob4 Man/Sob5 Man/Sob6 Man/Sob7 Man/Sob8 Man/Sob9 Man/Sob10 Man/Sob11 Man/Sob12 Man/Sob13 Man/Sob14 Man/Sob15 Man/Sob16 Man/Sob17 Man/Sob18 Man/Sob19 Man/Sob20 }
+Man/Sob1		CM1S01
+Man/Sob2		CM1S02
+Man/Sob3		CM1S03
+Man/Sob4		CM1S04
+Man/Sob5		CM1S05
+Man/Sob6		CM1S06
+Man/Sob7		CM1S07
+Man/Sob8		CM1S08
+Man/Sob9		CM1S09
+Man/Sob10		CM1S10
+Man/Sob11		CM1S11
+Man/Sob12		CM1S12
+Man/Sob13		CM1S13
+Man/Sob14		CM1S14
+Man/Sob15		CM1S15
+Man/Sob16		CM1S16
+Man/Sob17		CM1S17
+Man/Sob18		CM1S18
+Man/Sob19		CM1S19
+Man/Sob20		CM1S20
+$random Police/Combat	{ Man/Combat1 Man/Combat2 Man/Combat3 Man/Combat4 Man/Combat5 Man/Combat6 Man/Combat7 Man/Combat8 Police/Combat1 Police/Combat2 Police/Combat3 Police/Combat4 Police/Combat5 Police/Combat6 }
+Man/Combat1		CM1C01
+Man/Combat2		CM1C02
+Man/Combat3		CM1C03
+Man/Combat4		CM1C04
+Man/Combat5		CM1C05
+Man/Combat6		CM1C06
+Man/Combat7		CM1C07
+Man/Combat8		CM1C08
+Police/Combat1		CM2C01
+Police/Combat2		CM2C02
+Police/Combat3		CM2C03
+Police/Combat4		CM2C04
+Police/Combat5		CM2C05
+Police/Combat6		CM2C06
+$random Army/Combat	{ Man/Combat1 Man/Combat2 Man/Combat3 Man/Combat4 Man/Combat5 Man/Combat6 Man/Combat7 Man/Combat8 Army/Combat1 Army/Combat2 Army/Combat3 Army/Combat4 Army/Combat5 Army/Combat6 Army/Combat7 Army/Combat8 Army/Combat9 Army/Combat10 Army/Combat11 Army/Combat12 Army/Combat13 Army/Combat14 Army/Combat15 Army/Combat16 Army/Combat17 Army/Combat18 }
+Army/Combat1		CM3C01
+Army/Combat2		CM3C02
+Army/Combat3		CM3C03
+Army/Combat4		CM3C04
+Army/Combat5		CM3C05
+Army/Combat6		CM3C06
+Army/Combat7		CM3C07
+Army/Combat8		CM3C08
+Army/Combat9		CM3C09
+Army/Combat10		CM3C10
+Army/Combat11		CM3C11
+Army/Combat12		CM3C12
+Army/Combat13		CM3C13
+Army/Combat14		CM3C14
+Army/Combat15		CM3C15
+Army/Combat16		CM3C16
+Army/Combat17		CM3C17
+Army/Combat18		CM3C18
+$random Man/CorpseF	{ Man/Corpse1 Man/Corpse2 Man/Corpse3 Man/CorpseF1 Man/CorpseF2 Man/CorpseF3 Civilian/Corpse1 }
+Man/Corpse1		CM1L01
+Man/Corpse2		CM1L02
+Man/Corpse3		CM1L03
+Man/CorpseF1		CM1LF1
+Man/CorpseF2		CM1LF2
+Man/CorpseF3		CM1LF3
+Civilian/Corpse1		CM4L01
+$random Man/CorpseM	{ Man/Corpse1 Man/Corpse2 Man/Corpse3 Man/CorpseM1 Civilian/Corpse1 }
+Man/CorpseM1		CM1LM1
+$random Police/CorpseF	{ Man/Corpse1 Man/Corpse2 Man/Corpse3 Man/CorpseF1 Man/CorpseF2 Man/CorpseF3 Police/Corpse1 Police/Corpse2 Police/Corpse3 Police/Corpse4 }
+$random Police/CorpseM	{ Man/Corpse1 Man/Corpse2 Man/Corpse3 Man/CorpseM1 Civilian/Corpse1 Police/Corpse1 Police/Corpse2 Police/Corpse3 Police/Corpse4 }
+Police/Corpse1		CM2L01
+Police/Corpse2		CM2L02
+Police/Corpse3		CM2L03
+Police/Corpse4		CM2L04
+$random Army/CorpseF	{ Man/Corpse1 Man/Corpse2 Man/Corpse3 Man/CorpseF1 Man/CorpseF2 Man/CorpseF3 Police/Corpse1 Police/Corpse2 Police/Corpse3 Police/Corpse4 }
+$random Army/CorpseM	{ Man/Corpse1 Man/Corpse2 Man/Corpse3 Man/CorpseM1 Civilian/Corpse1 Police/Corpse1 Police/Corpse2 Police/Corpse3 Police/Corpse4 Army/CorpseM1 }
+Army/CorpseM1		CM3LM1
+$random Man/Death	{ Man/Death1 Man/Death2 Man/Death3 Man/Death4 Man/Death5 Man/Death6 Man/Death7 Man/Death8 Man/Death9 Man/Death10 Man/Death11 Man/Death12 Man/Death13 Man/Death14 Man/Death15 Man/Death16 Man/Death17 Man/Death18 Man/Death19 Man/Death20 }
+Man/Death1		CM1D01
+Man/Death2		CM1D02
+Man/Death3		CM1D03
+Man/Death4		CM1D04
+Man/Death5		CM1D05
+Man/Death6		CM1D06
+Man/Death7		CM1D07
+Man/Death8		CM1D08
+Man/Death9		CM1D09
+Man/Death10		CM1D10
+Man/Death11		CM1D11
+Man/Death12		CM1D12
+Man/Death13		CM1D13
+Man/Death14		CM1D14
+Man/Death15		CM1D15
+Man/Death16		CM1D16
+Man/Death17		CM1D17
+Man/Death18		CM1D18
+Man/Death19		CM1D19
+Man/Death20		CM1D20
+$random Man/Enemy	{ Man/Enemy1 Man/Enemy2 Man/Enemy3 Man/Enemy4 Man/Enemy5 Man/Enemy6 Man/Enemy7 Man/Enemy8 Man/Enemy9 Man/Enemy10 Man/Enemy11 Man/Enemy12 Man/Enemy13 Man/Enemy14 Man/Enemy15 Man/Enemy16 Man/Enemy17 Man/Enemy18 }
+Man/Enemy1		CM4E01
+Man/Enemy2		CM4E02
+Man/Enemy3		CM4E03
+Man/Enemy4		CM4E04
+Man/Enemy5		CM4E05
+Man/Enemy6		CM4E06
+Man/Enemy7		CM4E07
+Man/Enemy8		CM4E08
+Man/Enemy9		CM4E09
+Man/Enemy10		CM4E10
+Man/Enemy11		CM4E11
+Man/Enemy12		CM4E12
+Man/Enemy13		CM4E13
+Man/Enemy14		CM4E14
+Man/Enemy15		CM4E15
+Man/Enemy16		CM4E16
+Man/Enemy17		CM4E17
+Man/Enemy18		CM4E18
+$random Police/Enemy	{ Police/Enemy1 Police/Enemy2 Police/Enemy3 Police/Enemy4 Police/Enemy5 Police/Enemy6 }
+Police/Enemy1		CM2E01
+Police/Enemy2		CM2E02
+Police/Enemy3		CM2E03
+Police/Enemy4		CM2E04
+Police/Enemy5		CM2E05
+Police/Enemy6		CM2E06
+$random Army/Enemy	{ Army/Enemy1 Army/Enemy2 Army/Enemy3 Army/Enemy4 Army/Enemy5 Army/Enemy6 Army/Enemy7 Army/Enemy8 Army/Enemy9 Army/Enemy10 Army/Enemy11 Army/Enemy12 Army/Enemy13 Army/Enemy14 Army/Enemy15 Army/Enemy16 Army/Enemy17 Army/Enemy18 }
+Army/Enemy1		CM3E01
+Army/Enemy2		CM3E02
+Army/Enemy3		CM3E03
+Army/Enemy4		CM3E04
+Army/Enemy5		CM3E05
+Army/Enemy6		CM3E06
+Army/Enemy7		CM3E07
+Army/Enemy8		CM3E08
+Army/Enemy9		CM3E09
+Army/Enemy10		CM3E10
+Army/Enemy11		CM3E11
+Army/Enemy12		CM3E12
+Army/Enemy13		CM3E13
+Army/Enemy14		CM3E14
+Army/Enemy15		CM3E15
+Army/Enemy16		CM3E16
+Army/Enemy17		CM3E17
+Army/Enemy18		CM3E18
+$random Man/Facehugger	{ Man/Facehugger1 Man/Facehugger2 Man/Facehugger3 Man/Facehugger4 Man/Facehugger5 Man/Facehugger6 Man/Facehugger7 }
+Man/Facehugger1		CM1PF1
+Man/Facehugger2		CM1PF2
+Man/Facehugger3		CM1PF3
+Man/Facehugger4		CM1PF4
+Man/Facehugger5		CM1PF5
+Man/Facehugger6		CM1PF6
+Man/Facehugger7		CM1PF7
+$random Man/Idle	{ Man/Idle1 Man/Idle2 Man/Idle3 Man/Idle4 Man/Idle5 Man/Idle6 Man/Idle7 Man/Idle8 Man/Idle9 Man/Idle10 Man/Idle11 Man/Idle12 Man/Idle13 Man/Idle14 Man/Idle15 Man/Idle16 Man/Idle17 Man/Idle18 Man/Idle19 }
+Man/Idle1		CM1I01
+Man/Idle2		CM1I02
+Man/Idle3		CM1I03
+Man/Idle4		CM1I04
+Man/Idle5		CM1I05
+Man/Idle6		CM1I06
+Man/Idle7		CM1I07
+Man/Idle8		CM1I08
+Man/Idle9		CM1I09
+Man/Idle10		CM1I10
+Man/Idle11		CM1I11
+Man/Idle12		CM1I12
+Man/Idle13		CM1I13
+Man/Idle14		CM1I14
+Man/Idle15		CM1I15
+Man/Idle16		CM1I16
+Man/Idle17		CM1I17
+Man/Idle18		CM1I18
+Man/Idle19		CM1I19
+$random Police/Idle	{ Man/Idle1 Man/Idle2 Man/Idle3 Man/Idle4 Man/Idle5 Man/Idle6 Man/Idle7 Man/Idle8 Man/Idle9 Man/Idle10 Man/Idle11 Man/Idle12 Man/Idle13 Man/Idle14 Man/Idle15 Man/Idle16 Man/Idle17 Man/Idle18 Man/Idle19 Police/Idle1 }
+Police/Idle1		CM2I01
+$random Man/Pain	{ Man/Pain1 Man/Pain2 Man/Pain3 Man/Pain4 Man/Pain5 Civilian/Pain1 Civilian/Pain2 }
+Man/Pain1		CM1P01
+Man/Pain2		CM1P02
+Man/Pain3		CM1P03
+Man/Pain4		CM1P04
+Man/Pain5		CM1P05
+Civilian/Pain1		CM4P01
+Civilian/Pain2		CM4P02
+$random Police/Pain	{ Man/Pain1 Man/Pain2 Man/Pain3 Man/Pain4 Man/Pain5 Police/Pain1 Police/Pain2 Police/Pain3 Police/Pain4 }
+Police/Pain1		CM2P01
+Police/Pain2		CM2P02
+Police/Pain3		CM2P03
+Police/Pain4		CM2P04
+$random Army/Pain	{ Man/Pain1 Man/Pain2 Man/Pain3 Man/Pain4 Man/Pain5 Police/Pain1 Police/Pain2 Police/Pain3 Police/Pain4 Army/Pain1 }
+Army/Pain1		CM3P01
+$random Army/Taunt	{ Man/Taunt1 Man/Taunt2 Man/Taunt3 Man/Taunt4 Man/Taunt5 }
+Man/Taunt1		CM1T01
+Man/Taunt2		CM1T02
+Man/Taunt3		CM1T03
+Man/Taunt4		CM1T04
+Man/Taunt5		CM1T05
+$random Police/Taunt	{ Man/Taunt1 Man/Taunt2 Man/Taunt3 Man/Taunt4 Man/Taunt5 Police/Taunt1 Police/Taunt2 Police/Taunt3 Police/Taunt4 Police/Taunt5 Police/Taunt6 Police/Taunt7 Police/Taunt8 Police/Taunt9 Police/Taunt10 Police/Taunt11 Police/Taunt12 Police/Taunt13 }
+Police/Taunt1		CM2T01
+Police/Taunt2		CM2T02
+Police/Taunt3		CM2T03
+Police/Taunt4		CM2T04
+Police/Taunt5		CM2T05
+Police/Taunt6		CM2T06
+Police/Taunt7		CM2T07
+Police/Taunt8		CM2T08
+Police/Taunt9		CM2T09
+Police/Taunt10		CM2T10
+Police/Taunt11		CM2T11
+Police/Taunt12		CM2T12
+Police/Taunt13		CM2T13

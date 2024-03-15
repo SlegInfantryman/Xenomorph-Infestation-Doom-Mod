@@ -1,0 +1,3426 @@
+
+#include "Decorate/models.txt"
+
+ACTOR RifleZoomed : Inventory {}
+ACTOR M16BUY : Inventory {}
+ACTOR M60BUY : Inventory {}
+ACTOR Points : Ammo
+{
+	Inventory.PickupMessage "Earned a Points Stash"
+	Inventory.Amount 200
+	Inventory.MaxAmount 100000
+	Ammo.BackpackAmount 25
+	Ammo.BackpackMaxAmount 100000
+	Inventory.Icon "BPAK"
+	States
+	{
+	Spawn:
+		BPAK A -1
+		Stop
+	}
+}
+ACTOR M16LOAD : AMMO
+{
+	Inventory.MaxAmount 30
+	+ignoreskill
+	Inventory.Icon "M16ZA0"
+}
+ACTOR M16LOAD1 : AMMO
+{
+	Inventory.MaxAmount 30
+	+ignoreskill
+	Inventory.Icon "M16ZA0"
+}
+ACTOR 556 : Ammo
+{
+	Inventory.PickupMessage "Resupplied"
+	Inventory.MaxAmount 750
+	Ammo.BackpackAmount 750
+	Ammo.BackpackMaxAmount 750
+	Inventory.Icon "M16ZA0"
+	States
+		{
+		Spawn:
+			CLIP A -1
+			Stop
+		}
+}
+ACTOR M16GUNSMOKE
+{
+	Radius 3
+	Height 8
+	Speed 0.25
+	Damage 0
+	DamageType "308B"
+	FastSpeed 0.25
+	Scale .14
+	+RANDOMIZE
+	+ALLOWTHRUFLAGS
+	+NOGRAVITY
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	States
+	{
+	Spawn:
+		TNT1 A 0 
+		TNT1 A 0
+		Goto Death
+	Death:
+		SM4K ABCDEFGHIJKL 1 
+		SM4K MNOPQRSTUVWXYZ 1 A_ChangeVelocity(0,0,0.01)
+		Stop
+	}
+}
+
+ACTOR ArmySpecialForces : DoomPlayer 
+{
+	Speed 1
+	Health 100
+	Radius 8
+	Height 56
+	Mass 100
+	PainChance 1
+	Scale 1
+	Player.DisplayName "Army Special Forces"
+	Player.StartItem "M16", 1
+	Player.StartItem "M16LOAD", 30
+	Player.StartItem "M60", 1
+	Player.StartItem "M60LOAD", 100
+	Player.CrouchSprite "PLAY"
+	States
+	{
+	Spawn:
+		PLAY A -1
+		loop
+	See:
+		PLAY ABCD 4
+		Loop
+	Missile:
+		PLAY E 12
+		Goto Spawn
+	Melee:
+		PLAY F 6 Bright
+		Goto Missile
+	Pain:
+		PLAY G 4
+		PLAY G 4 A_Pain
+		Goto Spawn
+	Death:
+		PLAY H 10
+		PLAY I 10 A_PlayerScream
+		PLAY J 10 A_NoBlocking
+		PLAY KLM 10
+		PLAY N -1
+		Stop
+	XDeath:
+		PLAY O 5 
+		PLAY P 5 A_XScream
+		PLAY Q 5 A_NoBlocking
+		PLAY RSTUV 5
+		PLAY W -1
+		Stop
+	}
+}
+
+ACTOR M16 : Weapon 
+{
+	Weapon.SelectionOrder 100
+	Weapon.SlotNumber 3
+	Weapon.AmmoType2 "M16LOAD"
+	Weapon.AmmoType1 "Points"
+	Weapon.BobStyle "Smooth"
+	Weapon.AmmoGive 1
+	Weapon.AmmoUse 0
+	Inventory.PickupMessage "You picked up an M-16 Battle Rifle."
+	Inventory.Icon "M16ZA0"
+	+NOALERT
+States
+	{
+Ready.BUY:
+	M16P A 35 A_WeaponReady
+	Loop
+Deselect.BUY:
+	TNT1 A 0 {A_TakeInventory("RifleZoomed",1); A_ZoomFactor(1.0);}
+	TNT1 A 1 A_Lower
+	Loop
+Select.BUY:
+	TNT1 A 1 A_Raise
+	Loop
+Fire.BUY: 
+	M16P A 0 A_TakeInventory("Points",750)
+	M16C A 0 A_TakeInventory("M16BUY",1)
+	Goto Ready
+Fire.BUYFAIL: 
+	TNT1 A 0 A_JumpIfInventory("Points",750,"Fire.BUY")
+	M16P A 35 A_Print("750 Points Required")
+	Goto Ready
+Ready:
+	TNT1 A 0 A_JumpIfInventory("M16BUY",1,"Ready.BUY")
+	TNT1 A 0 A_JumpIfInventory("RifleZoomed",1,4)
+	TNT1 A 0 A_SetSpeed(0.75)
+	M16A A 35 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+	TNT1 A 0 A_GiveInventory("Health",5)
+	Loop
+	M16D A 35 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM)
+	TNT1 A 0 A_GiveInventory("Health",5)
+	TNT1 A 0 A_SetSpeed(0.5)
+	Loop
+Deselect:
+	TNT1 A 0 A_JumpIfInventory("M16BUY",1,"Deselect.BUY")
+	TNT1 A 0 {A_TakeInventory("RifleZoomed",1); A_ZoomFactor(1.0);}
+	M16A B 1 A_Lower
+	Loop
+Select:
+	TNT1 A 0 A_JumpIfInventory("M16BUY",1,"Select.BUY")
+	M16A B 1 A_Raise
+	Loop
+Fire: 
+	TNT1 A 0 A_JumpIfInventory("M16BUY",1,"Fire.BUYFAIL")
+	TNT1 A 0 A_SetSpeed(0.65)
+	TNT1 A 0 A_JumpIfInventory("RifleZoomed",1,"FireZoomed")
+	M16A A 0 A_JumpIfInventory("M16LOAD1",30,"Reload")
+	M16C A 0 Bright A_ZoomFactor(0.99)
+	M16C A 0 Bright A_PlaySoundEx("M16/FIRE1",0)
+	TNT1 A 0 Bright A_AlertMonsters(1250)
+	M16C A 1 Bright A_FireCustomMissile("556BULLET",fRandom(-3,3),0,1,5,0,fRandom(-5,5))
+	M16C A 0 Bright A_FireCustomMissile("556BULLET",fRandom(-4,4),0,1,5,0,fRandom(-6,6))
+	M16C A 0 Bright A_FireCustomMissile("556BULLET",fRandom(-5,5),0,1,5,0,fRandom(-7,7))
+	M16C A 0 Bright A_FireCustomMissile("M16GUNSMOKE",fRandom(-8,8),0,1,5,0,fRandom(-10,10))
+	M16C A 0 Bright A_GiveInventory("M16LOAD1",3)
+	M16C AB 1 
+	TNT1 A 0  A_TakeInventory("M16LOAD",1)
+	M16C CD 1 
+	TNT1 A 0  A_TakeInventory("M16LOAD",1)
+	M16C EA 1 
+	TNT1 A 0  A_TakeInventory("M16LOAD",1)
+	M16C BCDEA 1 
+	M16C A 0 Bright A_ZoomFactor(1.0)
+	M16C AAA 1 A_FireCustomMissile("556CASING",RANDOM(-45,-120),0,1,3)
+	TNT1 A 0 A_Jump(3,"Fire.Jam")
+	M16A A 0 A_Refire
+	Goto Ready
+Reload:
+	TNT1 A 0 A_JumpIfInventory("RifleZoomed",1,"FireZoomed2")
+	TNT1 A 0 A_SetSpeed(0.25)
+	M16A B 1 A_PlaySound("TMP/RAT")
+	M16A CDEFGH 2 
+	M16A I 2 A_PlaySound("M16/MOU")
+	M16A JKLMNOPQRSTU 2
+	M16A V 1 A_PlaySound("M16/MIN")
+	M16A V 0 A_TakeInventory("M16LOAD1",30)
+	M16C A 0 A_GiveInventory("M16LOAD",30)
+	M16A V 1 
+	M16B A 2 A_PlaySound("TMP/RAT")
+	M16B BC 2
+	M16B D 1 A_PlaySoundEx("M16/BTBBK",0)
+	M16B F 2
+	M16B G 1 A_PlaySoundEx("M16/BTFW",0)
+	M16B HIJKLM 2
+	Goto Ready
+FireZoomed: 
+	M16D A 0 A_JumpIfInventory("M16LOAD1",30,"FireZoomed2")
+	M16D B 0 A_SetSpeed(0.45)
+	M16D B 0 Bright A_ZoomFactor(1.45)
+	M16D A 0 Bright A_PlaySoundEx("M16/FIRE1",0)
+	TNT1 A 0 Bright A_AlertMonsters(1250)
+	M16D B 1 Bright A_FireCustomMissile("556BULLET",fRandom(1,1),0,1,5,0,fRandom(-2,1))
+	M16D B 0 Bright A_FireCustomMissile("556BULLET",fRandom(-1,1),0,1,5,0,fRandom(-2,2))
+	M16D B 0 Bright A_FireCustomMissile("556BULLET",fRandom(-2,2),0,1,5,0,fRandom(-3,3))
+	M16D B 0 Bright A_FireCustomMissile("M16GUNSMOKE",fRandom(-3,3),0,1,5,0,fRandom(-3,3))
+	M16D B 0 Bright A_GiveInventory("M16LOAD1",3)
+	M16D BC 1 
+	TNT1 A 0  A_TakeInventory("M16LOAD",1)
+	M16D DE 1 
+	TNT1 A 0  A_TakeInventory("M16LOAD",1)
+	M16D FB 1 
+	TNT1 A 0  A_TakeInventory("M16LOAD",1)
+	M16D CDEF 1
+	M16D B 0 Bright A_ZoomFactor(1.5)
+	M16D FFF 1 A_FireCustomMissile("556CASING",RANDOM(-45,-120),0,1,3)
+	TNT1 A 0 A_Jump(3,"FireZoomed3")
+	M16D A 0 A_Refire
+	Goto Ready
+FireZoomed2:
+	M16C F 2
+	M16C F 1 {A_TakeInventory("RifleZoomed",1); A_ZoomFactor(1.0);}
+	Goto Reload
+FireZoomed3:
+	M16C F 2
+	M16C F 1 {A_TakeInventory("RifleZoomed",1); A_ZoomFactor(1.0);}
+	TNT1 A 0 A_Jump(256,"Fire.Jam")
+	Goto Reload
+Zoom:
+	TNT1 A 0 A_JumpIfInventory("M16BUY",1,"Fire.BUYFAIL")
+	TNT1 A 0 A_JumpIfInventory("RifleZoomed",1,"UnZoom")
+	M16C F 2 A_SetSpeed(0.4)
+	TNT1 A 0 {A_GiveInventory("RifleZoomed",1); A_ZoomFactor(1.5);}
+	TNT1 A 0 A_Jump(256,"ZoomHold")
+UnZoom:
+	M16C F 2 A_SetSpeed(0.75)
+	TNT1 A 0 {A_TakeInventory("RifleZoomed",1); A_ZoomFactor(1.0);}
+	TNT1 A 0 A_Jump(256,"ZoomHold")
+ZoomHold:
+	TNT1 A 0 A_JumpIfInventory("RifleZoomed",1,3)
+	M16A A 7
+	TNT1 A 0 A_ReFire("ZoomHold")
+	Goto Ready
+	M16D A 7
+	TNT1 A 0 A_ReFire("ZoomHold")
+	Goto Ready
+Fire.Jam:
+	M16D A 0 Bright A_PlaySoundEx("M16/JAM",0)
+	M16A BC 2
+	M16B ABCD 2
+	M16B E 1 A_PlaySoundEx("M16/BTBBK",0)
+	M16B FGFG 4
+	M16B N 2 A_PlaySoundEx("M16/BTFW",0)
+	M16B O 2 A_FireCustomMissile("556CASING",RANDOM(-45,-120),0,1,3,CMF_ABSOLUTEPITCH)
+	M16B HIJKLM 2
+	Goto Ready
+Spawn:
+	CLIP A -1
+	Stop
+	}
+}
+
+ACTOR 556BULLET
+{
+	Radius 3
+	Height 8
+	Speed 70 
+	Damage 8
+	DamageType "556B"
+	FastSpeed 70
+	Scale .01
+	Gravity 0.1
+	Projectile
+	LightLevel 1
+	+ADDLIGHTLEVEL
+	+RANDOMIZE
+	+NODAMAGETHRUST
+	+NOEXTREMEDEATH
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+ALLOWTHRUFLAGS
+	+THRUGHOST
+	-SKYEXPLODE
+	+RIPPER
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "BULLET/R"
+	BounceFactor 0.5
+	WallBounceFactor 0.5
+	BounceCount 1
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		B308 A 6  
+		B308 A 0 A_ChangeFlag(Ripper,False)
+		B308 A 0 A_ChangeFlag(NOGRAVITY,False)
+		Goto Idle
+	Idle:
+		B308 A 3  
+		Loop
+	Death:
+		TNT1 A 0 A_SetScale(0.30)
+		SM4K ABCDEFGHIJKLMNOPQRSTUVWXYZ 3 
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+ACTOR 556CASING
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	Scale 0.04
+	Gravity 0.75
+	PushFactor 1
+	Projectile
+	LightLevel 10
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+BOUNCEONACTORS
+	+PUSHABLE
+	+SOLID
+	+THRUACTORS
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .25
+	WallBounceFactor 0.25
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		C308 AA 0
+		C308 A 1 A_SetAngle(90+angle)
+		Goto Idle
+	Idle:
+		C308 A 1 
+		Loop
+	Bounce:
+		TNT1 A 0 A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		C308 A 1 A_SetAngle(90+angle)
+		Goto Idle
+	Death:
+		C308 A 1 A_PlaySound("308/L",1,(0.1))
+		C308 A 1500
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR SpawnGeneral : DoomPlayer 
+{
+	Speed 1
+	Health 10000
+	Radius 8
+	Height 56
+	CameraHeight 120
+	Mass 100
+	PainChance 1
+	DamageFactor "Mustard", 0
+	Scale 1
+	MaxStepHeight 60
+	Player.DisplayName "Spectator"
+	Player.CrouchSprite "TNT1"
+	Player.SoundClass "SPECTATOR"
+	Player.StartItem "SPECFIST"
+	Player.StartItem "RedCard"
+	Player.StartItem "BlueCard"
+	Player.StartItem "YellowCard"
+	Player.StartItem "RedSkull"
+	Player.StartItem "BlueSkull"
+	Player.StartItem "YellowSkull"
+	+MVISBLOCKED
+	+THRUACTORS
+	+INVULNERABLE
+}
+
+ACTOR SPECFIST : Weapon 
+{
+	Weapon.SelectionOrder 3700
+	Weapon.Kickback 100
+	Weapon.SlotNumber 0
+	Inventory.PickupMessage "Roger Roger"
+	Scale 0.33
+	+WEAPON.MELEEWEAPON
+	+NODAMAGETHRUST
+	+NOEXTREMEDEATH
+	+NOALERT
+	+FORCEPAIN
+	States
+	{
+	Ready:
+		TNT1 A 1 A_WeaponReady
+		Loop
+	Deselect:
+		TNT1 A 1 A_Lower
+		Loop
+	Select:
+		TNT1 A 1 A_Raise
+		Loop
+	Fire:
+		TNT1 A 1 A_FireCustomMissile("EGGReinforcements")
+		TNT1 A 32   
+		Goto Ready
+	AltFire:
+		TNT1 A 1 A_FireCustomMissile("EGGReinforcementsQ")
+		TNT1 A 32  
+		Goto Ready
+	}
+}
+
+ACTOR 45BULLET
+{
+	Radius 3
+	Height 8
+	Speed 50 
+	Damage 1
+	DamageType "Host"
+	FastSpeed 50
+	Scale .15
+	Gravity 0.1
+	Projectile
+	+RANDOMIZE
+	+NODAMAGETHRUST
+	+NOEXTREMEDEATH
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	SeeSound "TMP/FIRE3"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "BULLET/R"
+	BounceFactor 0.5
+	WallBounceFactor 0.5
+	BounceCount 1
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		BL45 A 3  
+		BL45 A 0 A_ChangeFlag(Ripper,False)
+		B308 A 0 A_ChangeFlag(NOGRAVITY,False)
+		Goto Idle
+	Idle:
+		BL45 A 3  
+		Loop
+	Death:
+		TNT1 A 0 A_SetScale(0.25)
+		SM4K ABCDEFGHIJKLMNOPQRSTUVWXYZ 3 
+		Stop
+	}
+}
+	
+ACTOR EGGReinforcements 
+{
+	Height 60
+	Radius 20
+	Damage 0
+	Speed 10 
+	Scale 1
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Projectile
+	+MISSILE
+	+NODAMAGETHRUST
+	+FLOORHUGGER
+	States
+	{
+	Spawn:
+		TNT1 AA 8 
+		TNT1 A 1 A_SpawnItemEx("XEGG",0,0,5,0,0,0,0,SXF_NOPOINTERS)
+		Stop
+	}
+}
+
+ACTOR EGGReinforcementsQ
+{
+	Height 60
+	Radius 20
+	Damage 0
+	Speed 10 
+	Scale 1
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Projectile
+	+MISSILE
+	+NODAMAGETHRUST
+	+FLOORHUGGER
+	States
+	{
+	Spawn:
+		TNT1 AA 8 
+		TNT1 A 1 A_SpawnItemEx("XEGGQ",0,0,5,0,0,0,0,SXF_NOPOINTERS)
+		Stop
+	}
+}
+
+ACTOR AlienQueen 6665
+{
+Game Doom
+	Tag "Xenomorph Queen"
+	Health 1200
+	GibHealth -5
+	Radius 30
+	Height 150
+	Mass 100
+	Speed 20
+	Meleerange 80
+	MeleeDamage 1
+	PainChance 200
+	PainChance "Acid", 0
+	DamageFactor "Acid", 0
+	PainChance "XENO", 0
+	DamageFactor "XENO", 0
+	PainThreshold 2
+	Gravity 1.2
+	Friction 0.5
+	YScale 0.4
+	XScale 0.42
+	MaxDropoffHeight 500
+	MaxStepHeight 164
+	Species "Xenomorph"
+	Monster
+	BloodColor "Green"
+	LightLevel 50
+	+ADDLIGHTLEVEL
+	+SOLID
+	+SHOOTABLE
+	+JUMPDOWN
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+NOINFIGHTING
+	+SEEFRIENDLYMONSTERS
+	+ALWAYSFAST
+	+FRIGHTENING
+	+DONTRIP
+	+FULLVOLSEE
+	+LOOKALLAROUND
+	+THRUSPECIES
+	+THRUGHOST
+	+NOBLOCKMONST
+	+BLOCKASPLAYER
+	+SHADOW
+	+QUICKTORETALIATE
+	SeeSound "AlienQueen/Active"
+	PainSound "AlienQueen/Pain"
+	DeathSound "EMPTY/BLANK"
+	ActiveSound "AlienQueen/Active"
+	HitObituary "The Xenomorph Queen has claimed another victim. This world is now doomed."
+	Obituary "The Xenomorph Queen has claimed another victim. This world is now doomed."
+	States
+	{
+	Spawn:
+		ALQN A 6 
+		ALQN A 1 ACS_NamedExecute("XenoAggro",0)
+		ALQN A 1 A_Jump(258,"Idle.Idle")
+		Loop
+	Idle.Idle:
+		ALQN B 0 A_Jump(90,"Missile.Egg")
+		ALQN P 5 {A_PlaySound("AlienQueen/Taunt");A_AlertMonsters(1000);}
+		ALQN Q 65
+		ALQN A 1 A_Jump(258,"Idle")
+		Goto See
+	Idle:
+		ALQN A 1 A_SetSpeed(25) 
+		ALQN A 1 A_LookEx(0,0,1000,0,90,"See")
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN A 1 A_LookEx(0,0,1000,0,90,"See")
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN A 1 A_Jump(258,"Idle.Idle")
+		loop
+	Idle.Drop: 
+		ALQN APQP 3 
+		Goto See
+	Idle.CallOut:
+		ALQN B 0 A_Jump(100,"See")
+		ALQN P 3 {A_PlaySound("AlienQueen/Taunt");A_AlertMonsters(1000);}
+		TNT1 A 0 A_AlertMonsters(1000)
+		ALQN Q 50
+		ALQN P 5
+		Goto See
+	See: 
+		ALQN O 0 A_UnsetInvulnerable
+		ALQN A 1 A_SetSpeed(30) 
+		ALQN C 0 A_ChangeFlag(NOPAIN, False)
+		ALQN C 0 A_ChangeFlag(FRIGHTENED, False)
+		ALQN A 0 A_Jump(90,"Idle.Taunt")
+		ALQN A 0 A_Jump(90,"Idle.Charge")
+		ALQN A 0 A_Jump(90,"Idle.Claws")
+		ALQN A 0 A_Jump(90,"Idle.Tail")
+		ALQN A 0 A_Jump(200,"Idle.Egg")
+		ALW1 A 0 A_Jump(25,"Idle")
+		loop
+	Idle.ComeBack: 
+		ALQN O 0 A_UnsetInvulnerable
+		ALQN A 1 A_SetSpeed(40)
+		ALQN C 0 A_ChangeFlag(NOPAIN, True)
+		ALQN C 0 A_ChangeFlag(FRIGHTENED, False)
+		ALQN A 0 A_Jump(160,"Idle.Tail")
+		ALQN A 0 A_Jump(160,"Idle.Taunt")
+		ALQN A 0 A_Jump(160,"Idle.Claws")
+		ALQN A 0 A_Jump(160,"Idle.Charge")
+		ALQN A 0 A_Jump(90,"Idle.Egg")
+		loop
+	Idle.Taunt:
+		ALQN CEF 3 A_Chase("Melee.Taunt",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Taunt",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Taunt",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Taunt",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Taunt",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Taunt",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Taunt","Missile.Acid")
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Taunt","Missile.Acid")
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN J 0 A_Jump(256,"Melee.Taunt")
+		goto See
+	Melee.Taunt:
+		ALQN B 0 A_Jump(90,"Missile.Egg")
+		ALQN BA 3
+		ALQN PQ 3 A_FaceTarget
+		ALQN Q 1 A_Chase("Melee.Tongue",0)
+		ALQN B 0 A_Jump(256,"Idle.CallOut")
+		ALQN PA 3
+		goto See
+	Missile.Acid: 
+		ALQN TU 3 A_FaceTarget
+		ALQN V 2 A_PlaySoundEx("AlienQueen/Spit",0)
+		ALQN V 1 {A_FaceTarget;A_ChangeVelocity(5,0,0,CVF_RELATIVE);}
+		ALQN WWWWWWW 10 A_CustomMissile("AcidSpit",75,0,fRandom(-20,20),0,fRandom(100,160))
+		ALQN WA 1
+		goto See
+	Melee.Tongue:
+		TNT1 A 0 A_TakeInventory("EggToken",1)
+		ALQN B 0 A_Jump(100,"Missile.Acid")
+		ALQN Q 14 A_FaceTarget
+		ALQN R 1 A_PlaySoundEx("AlienQueen/Tongue",0)
+		ALQN R 3 {A_FaceTarget;A_ChangeVelocity(5,0,0,CVF_RELATIVE);}
+		ALQN S 3 A_CustomMeleeAttack((25),"AlienQueen/THit","AlienQueen/TMiss","XENO")
+		ALQN S 15 A_RadiusThrust(-600,70,RTF_NOIMPACTDAMAGE,70)
+		ALQN RQPA 3 A_FaceTarget
+		goto See
+	Idle.Claws:
+		ALQN CEF 3 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		goto See
+	Melee.Claws:
+		TNT1 A 0 A_TakeInventory("EggToken",1)
+		ALQN BAK 3
+		ALQN L 3 {A_FaceTarget;A_ChangeVelocity(5,0,0,CVF_RELATIVE);}
+		ALQN M 3 A_CustomMeleeAttack((5),"AlienQueen/Claw","AlienQueen/ClawM","XENO")
+		ALQN N 3 {A_FaceTarget;A_ChangeVelocity(5,0,0,CVF_RELATIVE);}
+		ALQN O 3 A_CustomMeleeAttack((5),"AlienQueen/Claw","AlienQueen/ClawM","XENO")
+		ALQN L 3 {A_FaceTarget;A_ChangeVelocity(5,0,0,CVF_RELATIVE);}
+		ALQN M 3 A_CustomMeleeAttack((5),"AlienQueen/Claw","AlienQueen/ClawM","XENO")
+		ALQN N 3 {A_FaceTarget;A_ChangeVelocity(5,0,0,CVF_RELATIVE);}
+		ALQN O 3 A_CustomMeleeAttack((5),"AlienQueen/Claw","AlienQueen/ClawM","XENO")
+		ALQN LKA 3
+		goto See
+	Idle.Tail:
+		ALQN CEF 3 A_Chase("Melee.Tail",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Tail",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Tail",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Tail",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Tail",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Tail",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase("Melee.Tail",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase("Melee.Tail",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		Goto See
+	Melee.Tail:
+		TNT1 A 0 A_TakeInventory("EggToken",1)
+		ALQN BA 3 A_ChangeFlag(NOPAIN, True)
+		ALQ1 AB 3
+		ALQ1 C 15 A_FaceTarget
+		ALQ1 D 3 {A_FaceTarget;A_ChangeVelocity(5,0,0,CVF_RELATIVE);}
+		ALQ1 D 0 A_CustomMissile("Tail",50,0,0)
+		ALQ1 EFG 3 
+		ALQ1 CBA 3 A_ChangeFlag(NOPAIN, False)
+		goto See
+	Idle.Charge:
+		ALQN B 2 A_Jump(130,"See")
+		ALQN B 0 A_SetSpeed(45)
+		ALQN B 8 A_PlaySoundEx("AlienQueen/Run",0)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN B 8
+		goto See
+	Melee.Charge:
+		ALQN C 1 A_FaceTarget
+		ALQN CEF 3 A_SkullAttack(50)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(500,45,0,45)
+		ALQN G 1 A_FaceTarget
+		ALQN GHI 3 A_SkullAttack(50)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(500,45,0,45)
+		ALQN B 1 A_SetSpeed(10)
+		Goto See
+	Idle.Egg:
+		ALQN B 3 A_Jump(130,"See")
+		ALQN B 0 A_ChangeFlag(FRIGHTENED, True)
+		ALQN B 0 A_SetSpeed(25)
+		ALQN CEF 3 A_Chase(0,"Missile.Egg")
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase(0,"Missile.Egg")
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase(0,"Missile.Egg")
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase(0,"Missile.Egg")
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase(0,"Missile.Egg")
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase(0,"Missile.Egg")
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN CEF 3 A_Chase(0,"Missile.Egg")
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_Chase(0,"Missile.Egg")
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN B 3 A_Jump(256,"Missile.Egg")
+		goto See
+	Missile.Egg:
+		TNT1 A 0 A_JumpIfInventory("EggToken",5,"See")
+		TNT1 A 0 A_Jump(33,"Missile.EggQ")
+		ALQN B 0 A_SpawnItemEx("XEGG",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		ALQN P 5 {A_PlaySound("AlienQueen/Taunt");A_AlertMonsters(1000);}
+		TNT1 A 0 A_GiveInventory("EggToken",1)
+		ALQN Q 65
+		ALQN P 5 A_ChangeFlag(FRIGHTENED, False)
+		ALQN B 0 A_Jump(125,"Idle.ComeBack")
+		Goto See
+	Missile.EggQ:
+		ALQN B 0 A_SpawnItemEx("XEGGQ",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		ALQN P 5 {A_PlaySound("AlienQueen/Taunt");A_AlertMonsters(1000);}
+		TNT1 A 0 A_GiveInventory("EggToken",1)
+		ALQN Q 65
+		ALQN P 5 A_ChangeFlag(FRIGHTENED, False)
+		ALQN B 0 A_Jump(125,"Idle.ComeBack")
+		Goto See
+	Idle.Retreat:
+		ALQN B 2 A_Jump(130,"See")
+		ALQN B 0 A_ChangeFlag(FRIGHTENED, True)
+		ALQN B 0 A_SetSpeed(35)
+		ALQN B 8 A_PlaySoundEx("AlienQueen/Run",0)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN CEF 2 A_Chase("Melee.Claws",0)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN GHI 2 A_Chase("Melee.Claws",0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN F 0 A_RadiusThrust(350,45,RTF_NOIMPACTDAMAGE,45)
+		ALQN F 0 A_Explode((1),45,XF_THRUSTLESS|XF_CIRCULAR,0,45,0,0,"Bulletpuff","XENO")
+		TNT1 A 0 A_AlertMonsters(500)
+		ALQN B 3 A_Jump(256,"Missile.Egg")
+		goto See
+	Pain:
+		ALQN X 0 A_ChangeFlag(FRIGHTENED, False)
+		ALQN X 1 A_Jump(125,"Idle.ComeBack")
+		ALQN X 1 {A_Pain;A_AlertMonsters(1000);}
+		ALQN XXYYXX 1 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-1,1),SXF_CLIENTSIDE)
+		ALQN AB 3 A_FaceTarget
+		ALQN CEF 3 A_ChangeVelocity(-10,0,0,CVF_RELATIVE)
+		ALQN F 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN GHI 3 A_ChangeVelocity(5,0,0)
+		ALQN J 1 A_PlaySound("AlienQueen/FootStep",0)
+		ALQN X 1 A_Jump(120,"Idle.Retreat")
+		ALQN O 0 A_UnsetInvulnerable
+		goto See
+	Death:
+		ALQN X 3
+		ALQN Y 3 A_PlaySoundEx("AlienQueen/Death",0)
+		ALQN Z 3 A_NoBlocking
+		ALQ2 A 10 A_PlaySoundEx("AlienQueen/Fall",0)
+		ALQ2 A -1
+		stop
+	XDeath:
+		ALQN X 3 A_PlaySoundEx("AlienQueen/Death",0)
+		ALQN X 1 A_PlaySoundEx("AlienQueen/Explode",0)
+		TNT1 A 0 A_SpawnItemEx("AlienQHead",random(-1,1),random(-1,1),random(30,60),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AlienQArm",random(-1,1),random(-1,1),random(20,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AlienQArm",random(-1,1),random(-1,1),random(20,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AlienQLeg",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AlienQLeg",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AlienQTail",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 1 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 1 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 AAAA 1 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 1 A_NoBlocking
+		TNT1 A -1
+		Stop
+  }
+}
+
+
+ACTOR AcidBlood
+{
+	Radius 5
+	Height 5
+	Gravity 1
+	Scale 0.35
+	States
+	{
+	Spawn:
+		BLUG ABCDEFGHIJ 3 
+		Goto Idle
+	Spray:
+		BLUG A 1 A_SetScale(0.5)
+		BLUG ABCDEFGHIJ 3 
+		Goto Idle
+	Idle:
+		BLUG A 0 A_Jump(50,"Spray.A")
+		BLUG A 0 A_Jump(50,"Spray.B")
+		BLUG A 0 A_Jump(50,"Spray.C")
+		BLUG A 0 A_Jump(50,"Spray.D")
+		BLUG A 0 A_Jump(50,"Spray.E")
+		BLUG A 0 A_Jump(50,"Spray.E")
+		BLUG A 0 A_Jump(50,"Spray.E")
+		BLUG A 0 A_Jump(50,"Spray.E")
+		Loop
+	Spray.A:
+		BPUG A 1 A_SpawnItemEx("ACID",fRandom(-3,3),fRandom(-3,3),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		BPUG A 1 A_NoBlocking
+		BPUG A -1
+		Stop
+	Spray.B:
+		BPUG B 1 A_SpawnItemEx("ACID",fRandom(-3,3),fRandom(-3,3),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		BPUG B 1 A_NoBlocking
+		BPUG B -1
+		Stop
+	Spray.C:
+		BPUG V 1 A_SpawnItemEx("ACID",fRandom(-3,3),fRandom(-3,3),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		BPUG C 1 A_NoBlocking
+		BPUG C -1
+		Stop
+	Spray.D:
+		BPUG D 1 A_SpawnItemEx("ACID",fRandom(-3,3),fRandom(-3,3),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		BPUG D 1 A_NoBlocking
+		BPUG D -1
+		Stop
+	Spray.E:
+		TNT1 A -1 
+		Stop
+	}
+}
+
+Actor ACID 
+{
+	Tag "Acid Blood"
+	Health 1
+	Radius 5
+	Height 5
+	YScale 0.5
+	XScale 0.53
+	Gravity 1
+	SeeSound "EMPTY/BLANK"
+	ActiveSound "EMPTY/BLANK"
+	DamageType Acid
+	+INVULNERABLE
+	+NOBLOOD
+	-NOGRAVITY
+	-SOLID
+	States
+	{
+	Spawn:
+		SBEM A 0 A_Jump(256,"Death")
+		loop
+	Death:
+		SBEM A 0 A_PlaySoundEx("AlienQueen/Blood",0)
+		TNT1 A 0 A_SpawnItemEx("BloodFloorX",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		SBEM ABCDEFGHIJKLM 8 Bright A_Explode((1),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		SBEM ABCDEFGHIJKLM 8 Bright A_Explode((1),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		TNT1 A 0 A_NoBlocking
+		Stop
+	}
+}
+
+ACTOR AcidSpit
+{
+	Radius 20
+	Height 8
+	Speed 10 
+	Damage (1)
+	FastSpeed 10
+	YScale 0.3
+	XScale 0.32
+	Gravity 0.2
+	Projectile
+	-NOGRAVITY
+	+EXTREMEDEATH
+	+DONTREFLECT
+	+THRUACTORS
+	+FOILINVUL
+	SeeSound "AlienQueen/TailM"
+	DeathSound "AlienQueen/Tail"
+	States
+	{
+	Spawn:
+		BLUG ABCDEFGHIJ 3  
+		Loop
+	Death:
+		BPUG D 1 A_SpawnItemEx("ACID",fRandom(-3,3),fRandom(-3,3),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		BPUG D 1 A_NoBlocking
+		TNT1 D -1 
+		Stop
+	}
+}
+
+
+ACTOR Tail
+{
+	Radius 20
+	Height 8
+	Speed 12 
+	Damage 6
+	FastSpeed 12
+	YScale 0.4
+	XScale 0.42
+	Gravity 0.9
+	DamageType "XENO"
+	Projectile
+	-NOGRAVITY
+	+EXTREMEDEATH
+	+DONTREFLECT
+	+FOILINVUL
+	SeeSound "AlienQueen/TailM"
+	DeathSound "AlienQueen/Tail"
+	States
+	{
+	Spawn:
+		TNT1 A 1  
+		Loop
+	Death:
+		SBEM A 0 A_PlaySoundEx("AlienQueen/TailHit",0)
+		TNT1 A 1 A_RadiusThrust(1000,200,0,200)
+		Stop
+	}
+}
+
+ACTOR Tail2
+{
+	Radius 20
+	Height 8
+	Speed 6 
+	Damage 5
+	FastSpeed 6
+	Scale 0.4
+	Gravity 0.9
+	DamageType "XENO"
+	Projectile
+	-NOGRAVITY
+	+EXTREMEDEATH
+	+DONTREFLECT
+	+FOILINVUL
+	SeeSound "AlienQueen/TailM"
+	DeathSound "AlienQueen/Tail"
+	States
+	{
+	Spawn:
+		TNT1 A 1  
+		Loop
+	Death:
+		SBEM A 0 A_PlaySoundEx("AlienQueen/TailHit",0)
+		TNT1 A 1 A_RadiusThrust(1000,100,RTF_NOIMPACTDAMAGE,100)
+		Stop
+	}
+}
+
+ACTOR MeatAlien 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.04
+	XScale 0.05
+	Gravity 0.6
+	PushFactor 1
+	Projectile
+	LightLevel 75
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+THRUACTORS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		ALQ2 F 12 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		F1RE A 0 A_Jump(100,"Death")
+		Loop
+	Death:
+		ALQ2 F -1
+	}
+}
+
+ACTOR AlienQHead
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.25
+	XScale 0.26
+	Gravity 0.6
+	PushFactor 1
+	Projectile
+	LightLevel 75
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+THRUACTORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		ALQ2 B 12 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		F1RE A 0 A_Jump(100,"Death")
+		Loop
+	Death:
+		ALQ2 B -1
+	}
+}
+
+ACTOR AlienQArm 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.25
+	XScale 0.26
+	Gravity 0.6
+	PushFactor 1
+	Projectile
+	LightLevel 75
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+THRUACTORS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		ALQ2 C 12 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		F1RE A 0 A_Jump(100,"Death")
+		Loop
+	Death:
+		ALQ2 C -1
+	}
+}
+
+ACTOR AlienQLeg 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.25
+	XScale 0.26
+	Gravity 0.6
+	PushFactor 1
+	Projectile
+	LightLevel 75
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+THRUACTORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		ALQ2 E 12 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		F1RE A 0 A_Jump(100,"Death")
+		Loop
+	Death:
+		ALQ2 E -1
+	}
+}
+
+ACTOR AlienQTail 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.35
+	XScale 0.36
+	Gravity 0.6
+	PushFactor 1
+	Projectile
+	LightLevel 75
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+THRUACTORS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		ALQ2 D 12 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		F1RE A 0 A_Jump(100,"Death")
+		Loop
+	Death:
+		ALQ2 D -1
+	}
+}
+
+ACTOR RESIN
+{
+	Radius 3
+	Height 3
+	Speed 20 
+	Damage 0
+	FastSpeed 20
+	Scale 1
+	Gravity -0.5
+	Projectile
+	+NOGRAVITY
+	+MTHRUSPECIES
+	+THRUACTORS
+	+DONTREFLECT
+	SeeSound "Empty/Blank"
+	DeathSound "Empty/Blank"
+	States
+	{
+	Spawn:
+		TNT1 A 20  
+		Goto Death
+	Death:
+		TNT1 A 1 
+		Stop
+	}
+}
+
+
+ACTOR DetectFloorPuff
+{
+	Radius 1
+	Height 4
+	+MISSILE
+	+NOTELEPORT
+	+NOBLOCKMAP
+	+THRUACTORS
+	+MOVEWITHSECTOR
+	+NODAMAGETHRUST
+	-DONTSPLASH
+	States
+	{
+	Spawn:
+		TNT1 A 4 
+		Stop
+	Death:
+		TNT1 A 0 A_CheckFloor("FloorPuff")
+		Stop
+	FloorPuff:
+		TNT1 A 0 A_SpawnItemEx("GiantRESIN",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE)
+		Stop
+	}
+}
+
+ACTOR EggSpit
+{
+	Radius 20
+	Height 8
+	Speed 4 
+	Damage 0
+	FastSpeed 4
+	Scale 0.6
+	Gravity 0.2
+	Projectile
+	-NOGRAVITY
+	+EXTREMEDEATH
+	+DONTREFLECT
+	SeeSound "AlienQueen/TailM"
+	DeathSound "AlienQueen/Tail"
+	States
+	{
+	Spawn:
+		BLUG ABCDEFGHIJ 3  
+		Loop
+	Death:
+		BPUG D 1 A_SpawnItemEx("XEGG",fRandom(-3,3),fRandom(-3,3),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		BPUG D -1 A_NoBlocking
+		Stop
+	}
+}
+
+Actor XEGG 6660
+{
+	Tag "Xenomorph Warrior Egg"
+	Health 100
+	Radius 10
+	Height 30
+	Mass 100
+	YScale 0.15
+	XScale 0.16
+	PainChance "Acid", 0
+	DamageFactor "Acid", 0
+	PainChance "XENO", 0
+	DamageFactor "XENO", 0
+	DeathSound "AIRF/EXPLODE"
+	Species "Xenomorph"
+	BloodColor "Green"
+	LightLevel 75
+	Monster
+	+ADDLIGHTLEVEL
+	+SHOOTABLE
+	+SEEFRIENDLYMONSTERS
+	+QUICKTORETALIATE
+	+THRUSPECIES
+	+DONTRIP
+	+LOOKALLAROUND
+	+SHADOW
+	+NOINFIGHTING
+	States
+	{
+	Spawn:
+		XEGG AAA 1
+		XEGG A 0 A_Jump(10,"Spawn.A")
+		XEGG A 0 A_Jump(10,"Spawn.B")
+		XEGG A 0 A_Jump(10,"Spawn.C")
+		XEGG A 0 A_Jump(10,"Spawn.D")
+		XEGG A 0 A_Jump(10,"Spawn.E")
+		XEGG A 0 A_Jump(10,"Spawn.C")
+		Loop
+	Spawn.A:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESIN",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.B:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINV",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.C:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINW",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.D:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINX",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.E:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINY",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.F:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINZ",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Idle:
+		XEGG A 1 A_CustomMissile("RESIN",50,0,RANDOM(-180,180),CMF_AIMDIRECTION,0)
+		XEGG A 300 
+		XEGG A 1 A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"Idle.Hatch")
+		XEGG A 1 A_Jump(100,"Idle.Hatch")
+		loop
+	Idle.Hatch:
+		XEGG A 1 A_Jump(100,"Idle.Hatch")
+		XEGG B 10 A_PlaySoundEx("Facehugger/Egg",0)
+		XEGG B 1 A_SpawnItemEx("Facehugger",0,0,51,0,0,0,0,0)
+		XEGG B -1 
+		Stop
+	Death:
+		XEGG C 1 A_NoBlocking
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 10 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		XEGG C -1
+		Stop
+	}
+}
+
+Actor XEGGQ 6661
+{
+	Tag "Xenomorph Queen Egg"
+	Health 150
+	Radius 10
+	Height 40
+	Mass 100
+	YScale 0.15
+	XScale 0.16
+	PainChance "Acid", 0
+	DamageFactor "Acid", 0
+	PainChance "XENO", 0
+	DamageFactor "XENO", 0
+	DeathSound "AIRF/EXPLODE"
+	Species "Xenomorph"
+	BloodColor "Green"
+	LightLevel 75
+	Monster
+	+ADDLIGHTLEVEL
+	-SOLID
+	+SHOOTABLE
+	+SEEFRIENDLYMONSTERS
+	+QUICKTORETALIATE
+	+DONTRIP
+	+LOOKALLAROUND
+	+THRUSPECIES
+	+NOBLOCKMONST
+	+SHADOW
+	+NOINFIGHTING
+	States
+	{
+	Spawn:
+		XEGG AAA 1
+		XEGG A 0 A_Jump(10,"Spawn.A")
+		XEGG A 0 A_Jump(10,"Spawn.B")
+		XEGG A 0 A_Jump(10,"Spawn.C")
+		Loop
+	Spawn.A:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESIN",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.B:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINV",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.C:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINW",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.D:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINX",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.E:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINY",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Spawn.F:
+		XEGG A 25
+		XEGG A 0 A_CustomMissile("RESIN",20,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",20,0,-180,CMF_AIMDIRECTION,0)
+		XEGG A 1 A_SpawnItemEx("GiantRESINZ",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		XEGG A 1 A_ChangeFlag(SOLID, True)
+		XEGG A 1 A_Jump(256,"Idle")
+		loop
+	Idle:
+		XEGG A 1 A_CustomMissile("RESIN",50,0,RANDOM(-180,180),CMF_AIMDIRECTION,0)
+		XEGG A 150 
+		XEGG A 1 A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"Idle.Hatch")
+		XEGG A 1 A_Jump(100,"Idle.Hatch")
+		loop
+	Idle.Hatch:
+		XEGG A 1 A_Jump(100,"Idle.Hatch")
+		XEGG B 10 A_PlaySoundEx("Facehugger/Egg",0)
+		XEGG B 1 A_SpawnItemEx("FacehuggerQ",0,0,51,0,0,0,0,0)
+		XEGG B -1 
+		Stop
+	Death:
+		XEGG C 1 A_NoBlocking
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 1 A_CustomMissile("MeatEgg",40,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,30)
+		XEGG C 10 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		XEGG C -1
+		Stop
+	}
+}
+
+ACTOR MeatEgg 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.25
+	XScale 0.26
+	Gravity 0.6
+	PushFactor 1
+	Projectile
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		F1RE A 0 A_Jump(200,"Death")
+		Loop
+	Death:
+		XEGG D -1
+	}
+}
+
+
+
+
+
+ACTOR BursterWarrior 6662
+{
+Game Doom
+	Tag "Warrior Chestburster"
+	Health 150
+	GibHealth -5
+	Health 75
+	Radius 20
+	Height 10
+	Mass 50
+	Speed 20
+	Meleerange 150
+	MeleeDamage 1
+	PainThreshold 1
+	PainChance 225
+	PainChance "Acid", 0
+	DamageFactor "Acid", 0
+	PainChance "XENO", 0
+	DamageFactor "XENO", 0
+	Gravity 1.5
+	Friction 1.0
+	YScale 0.1
+	XScale 0.12
+	MaxDropoffHeight 256
+	MaxStepHeight 256
+	Species "Xenomorph"
+	FloatSpeed 50
+	Monster
+	BloodColor "Green"
+	LightLevel 75
+	+ADDLIGHTLEVEL
+	+SOLID
+	+SHOOTABLE
+	+NOINFIGHTING
+	+SEEFRIENDLYMONSTERS
+	+THRUSPECIES
+	+THRUGHOST
+	+QUICKTORETALIATE
+	+BLOCKASPLAYER
+	+LOOKALLAROUND
+	+JUMPDOWN
+	+NOBLOCKMONST
+	+SHADOW
+	+ALWAYSFAST
+	-NOGRAVITY
+	SeeSound "Facehugger/Idle"
+	PainSound "EMPTY/BLANK"
+	DeathSound "Facehugger/Death"
+	ActiveSound "Facehugger/Idle"
+	HitObituary "You were somehow killed by a chestburster before it could mature."
+	Obituary "You were somehow killed by a chestburster before it could mature."
+	States
+	{
+	Spawn:
+		ALCB EE 1 
+		ALCB E 1 ACS_NamedExecute("XenoAggro",0)
+		ALCB E 1 {A_PlaySoundEx("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		ALCB E 1 A_ChangeVelocity(20,0,0,CVF_RELATIVE)
+		ALCB EF 6 
+		ALCB F 1 A_CustomMeleeAttack((5),"Facehugger/Tail","EMPTY/BLANK")
+		ALCB G 1 A_ChangeVelocity(0,0,0)
+		ALCB G 0 A_ChangeFlag(FRIGHTENED, True)
+		goto Idle
+	Idle:
+		ALW1 A 0 A_SetSpeed(40)
+		TNT1 A 0 A_JumpIfInventory("XenoGrow",4,"Idle.CBGrowCont")
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		TNT1 A 0 A_GiveInventory("XenoGrow",1)
+		ALW1 A 0 A_Jump(100,"Idle.CBTaunt")
+		ALW1 A 0 A_Jump(100,"Idle.CBHide")
+		loop
+	See: 
+		TNT1 A 0 A_JumpIfInventory("XenoGrow",4,"Idle.CBGrowCont")
+		ALCB A 0 A_SetSpeed(40)
+		TNT1 A 0 A_ChangeFlag(FRIGHTENED, True)
+		ALW1 A 0 A_Jump(75,"Idle.CBTaunt")
+		ALW1 A 0 A_Jump(150,"Idle.CBHide")
+		loop
+	Idle.CBTaunt:
+		TNT1 A 0 A_Jump(100,"See")
+		TNT1 A 0 A_Jump(128,"Idle.CBTauntAlt")
+		ALCB GFEDA 3
+		ALCB A 32
+		ALCB ADEFG 3
+		TNT1 A 0 A_GiveInventory("XenoGrow",1)
+		ALW1 A 0 A_Jump(200,"Idle.CBHide")
+		Goto See
+	Idle.CBTauntAlt:
+		TNT1 A 0 A_Jump(100,"See")
+		ALCB GFEDA 3
+		ALCB B 2 {A_PlaySoundEx("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		ALCB CBA 9
+		ALCB ADEFG 3
+		TNT1 A 0 A_GiveInventory("XenoGrow",1)
+		Goto See
+	Idle.CBHide:
+		TNT1 A 0 A_Jump(100,"See")
+		ALCB H 2 A_SetSpeed(40)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB K 1 A_GiveInventory("XenoGrow",1)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB H 3 A_Jump(256,"See")
+		loop
+	Pain:
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		ALCB H 0 A_Jump(256,"Missile.CBHide")
+	Missile.CBHide:
+		ALCB H 2 A_SetSpeed(40)
+		ALCB AFG 2 A_FaceTarget
+		ALCB H 1 
+		ALCB I 1 A_ChangeVelocity(-20,0,10,CVF_RELATIVE)
+		ALCB IJK 3 A_FaceMovementDirection
+		ALCB K 1 A_PlaySoundEx("Facehugger/Tail",0)
+		ALCB K 1 A_Explode((1),50,0)
+		ALCB K 1 A_ChangeVelocity(0,0,0)
+		ALCB K 5 A_Jump(256,"Idle.CBHideAlt")
+		goto See
+	Idle.CBHideAlt:
+		TNT1 A 0 A_Jump(100,"See")
+		ALCB H 2 A_SetSpeed(40)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB K 1 A_GiveInventory("XenoGrow",1)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB H 3 A_Jump(256,"See")
+		loop
+	Idle.CBGrow:
+		ALW1 B 0 A_JumpIf((ceilingz -z) <= 60,"Idle.CBGrowCont")
+		ALCB KLM 20
+		ALCB G 0 A_ChangeFlag(INVULNERABLE, True)
+		ALCB M 1 A_PlaySoundEx("Facehugger/Egg",0)
+		ALCW A 3
+		ALCW B 3 A_SetScale(0.2,0.22)
+		ALCW B 3 A_SetScale(0.3,0.32)
+		ALCW BCDEFGH 15 
+		XEGG A 0 A_CustomMissile("RESIN",40,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-180,CMF_AIMDIRECTION,0)
+		ALCW H 3 A_SpawnItemEx("GiantRESIN",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("XenoWarrior",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION)
+		Stop
+	Idle.CBGrowCont:
+		ALCB IJKIJKIJKIJK 3 A_Wander
+		ALCB H 0 A_Jump(256,"Idle.CBGrow")
+	Death:
+		TNT1 A 1 A_PlaySoundEx("Facehugger/Death",0)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 1 A_NoBlocking
+		TNT1 A -1
+		Stop
+	}
+}
+
+ACTOR BursterQueen 6663
+{
+Game Doom
+	Tag "Queen Chestburster"
+	Health 200
+	GibHealth -5
+	Health 75
+	Radius 30
+	Height 10
+	Mass 100
+	Speed 20
+	Meleerange 150
+	MeleeDamage 1
+	PainThreshold 1
+	PainChance 225
+	PainChance "Acid", 0
+	DamageFactor "Acid", 0
+	PainChance "XENO", 0
+	DamageFactor "XENO", 0
+	Gravity 1.5
+	Friction 1.0
+	YScale 0.15
+	XScale 0.17
+	MaxDropoffHeight 256
+	MaxStepHeight 256
+	Species "Xenomorph"
+	FloatSpeed 50
+	Monster
+	BloodColor "Green"
+	LightLevel 75
+	+ADDLIGHTLEVEL
+	+SOLID
+	+SHOOTABLE
+	+MISSILEMORE
+	+MISSILEEVENMORE
+	+THRUSPECIES
+	+THRUGHOST
+	+SEEFRIENDLYMONSTERS
+	+BLOCKASPLAYER
+	+QUICKTORETALIATE
+	+NOINFIGHTING
+	+LOOKALLAROUND
+	+JUMPDOWN
+	+NOBLOCKMONST
+	+SHADOW
+	+ALWAYSFAST
+	-NOGRAVITY
+	SeeSound "Facehugger/Idle"
+	PainSound "EMPTY/BLANK"
+	DeathSound "Facehugger/Death"
+	ActiveSound "Facehugger/Idle"
+	HitObituary "You were somehow killed by a Queen chestburster before it could mature."
+	Obituary "You were somehow killed by a Queen chestburster before it could mature."
+	States
+	{
+	Spawn:
+		ALCB EE 1 
+		ALCB E 1 ACS_NamedExecute("XenoAggro",0)
+		ALCB E 1 {A_PlaySoundEx("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		ALCB E 1 A_ChangeVelocity(20,0,0,CVF_RELATIVE)
+		ALCB EF 6 
+		ALCB F 1 A_CustomMeleeAttack((5),"Facehugger/Tail","EMPTY/BLANK")
+		ALCB G 1 A_ChangeVelocity(0,0,0)
+		ALCB G 0 A_ChangeFlag(FRIGHTENED, True)
+		goto Idle
+	Idle:
+		ALW1 A 0 A_SetSpeed(40)
+		TNT1 A 0 A_JumpIfInventory("XenoGrow",4,"Idle.CBGrowCont")
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		ALCB IJKIJKIJKIJK 3 {A_Wander;A_LookEx(LOF_NOSOUNDCHECK,0,1000,0,90,"See");}
+		TNT1 A 0 A_GiveInventory("XenoGrow",1)
+		ALW1 A 0 A_Jump(100,"Idle.CBTaunt")
+		ALW1 A 0 A_Jump(100,"Idle.CBHide")
+		loop
+	See: 
+		TNT1 A 0 A_JumpIfInventory("XenoGrow",4,"Idle.CBGrowCont")
+		ALCB A 0 A_SetSpeed(40)
+		TNT1 A 0 A_ChangeFlag(FRIGHTENED, True)
+		ALW1 A 0 A_Jump(75,"Idle.CBTaunt")
+		ALW1 A 0 A_Jump(150,"Idle.CBHide")
+		loop
+	Idle.CBTaunt:
+		TNT1 A 0 A_Jump(100,"See")
+		TNT1 A 0 A_Jump(128,"Idle.CBTauntAlt")
+		ALCB GFEDA 3
+		ALCB A 32
+		ALCB ADEFG 3
+		TNT1 A 0 A_GiveInventory("XenoGrow",1)
+		ALW1 A 0 A_Jump(200,"Idle.CBHide")
+		Goto See
+	Idle.CBTauntAlt:
+		TNT1 A 0 A_Jump(100,"See")
+		ALCB GFEDA 3
+		ALCB B 2 {A_PlaySoundEx("Facehugger/Screech",0);A_AlertMonsters(1000);}
+		ALCB CBA 9
+		ALCB ADEFG 3
+		TNT1 A 0 A_GiveInventory("XenoGrow",1)
+		Goto See
+	Idle.CBHide:
+		TNT1 A 0 A_Jump(100,"See")
+		ALCB H 2 A_SetSpeed(40)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB K 1 A_GiveInventory("XenoGrow",1)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB H 3 A_Jump(256,"See")
+		loop
+	Pain:
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		ALCB H 0 A_Jump(256,"Missile.CBHide")
+	Missile.CBHide:
+		ALCB H 2 A_SetSpeed(40)
+		ALCB AFG 2 A_FaceTarget
+		ALCB H 1 
+		ALCB I 1 A_ChangeVelocity(-20,0,10,CVF_RELATIVE)
+		ALCB IJK 3 A_FaceMovementDirection
+		ALCB K 1 A_PlaySoundEx("Facehugger/Tail",0)
+		ALCB K 1 A_Explode((1),50,0)
+		ALCB K 1 A_ChangeVelocity(0,0,0)
+		ALCB K 5 A_Jump(256,"Idle.CBHideAlt")
+		goto See
+	Idle.CBHideAlt:
+		TNT1 A 0 A_Jump(100,"See")
+		ALCB H 2 A_SetSpeed(40)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,0)
+		ALCB K 1 A_GiveInventory("XenoGrow",1)
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB IJKIJKIJKIJK 3 A_Chase(0,"Missile.CBHide")
+		ALCB H 3 A_Jump(256,"See")
+		loop
+	Idle.CBGrow:
+		ALW1 B 0 A_JumpIf((ceilingz -z) <= 150,"Idle.CBGrowCont")
+		ALCB G 0 A_ChangeFlag(INVULNERABLE, True)
+		ALCB KLM 20
+		ALCB M 1 A_PlaySoundEx("Facehugger/Egg",0)
+		ALCW A 3
+		ALCW B 3 A_SetScale(0.2,0.22)
+		ALCW B 3 A_SetScale(0.24,0.26)
+		ALCW B 3 A_SetScale(0.3,0.32)
+		ALCW B 3 A_SetScale(0.4,0.42)
+		ALCQ BCDEFGHIJ 15 
+		XEGG A 0 A_CustomMissile("RESIN",40,0,0,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,180,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-30,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-60,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-90,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-120,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-150,CMF_AIMDIRECTION,0)
+		XEGG A 0 A_CustomMissile("RESIN",40,0,-180,CMF_AIMDIRECTION,0)
+		ALCQ H 3 A_SpawnItemEx("GiantRESIN",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("AlienQueen",0,0,25,0,0,0,0,SXF_NOCHECKPOSITION)
+		Stop
+	Idle.CBGrowCont:
+		ALCB IJKIJKIJKIJK 3 A_Wander
+		ALCB H 0 A_Jump(256,"Idle.CBGrow")
+	Death:
+		TNT1 A 1 A_PlaySoundEx("Facehugger/Death",0)
+		TNT1 AAAA 0 A_SpawnItemEx("MeatAlien",random(-1,1),random(-1,1),random(16,50),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 0 A_SpawnItemEx("AcidSpit",random(-1,1),random(-1,1),random(4,50),random(-6,6),random(-6,6),random(-6,6),SXF_CLIENTSIDE)
+		TNT1 A 1 A_NoBlocking
+		TNT1 A -1
+		Stop
+	}
+}
+
+ACTOR XenoGrow : Inventory 
+{
+	Inventory.MaxAmount 7
+	+ignoreskill
+}
+
+ACTOR EggToken : Inventory 
+{
+	Inventory.MaxAmount 10
+	+ignoreskill
+}
+
+Actor HUMANHost 
+{
+	Tag "HumanHost"
+	Health 1000
+	Radius 20
+	Height 20
+	Mass 100
+	Scale 1
+	PainChance 256
+	BloodColor "Red"
+	LightLevel 75
+	Monster
+	+ADDLIGHTLEVEL
+	+INVULNERABLE
+	+SHOOTABLE
+	+NOINFIGHTING
+	States
+	{
+	Spawn:
+		TNT1 AAA 1
+		TNT1 AAA 1 
+		TNT1 A 1 A_Jump(256,"Idle")
+		loop
+	Idle:
+		TNT1 A 1 A_CheckProximity("Pain.Host2","Facehugger",150,1,CPXF_SETTARGET)
+		TNT1 A 1 A_CheckProximity("Pain.Host3","FacehuggerQ",150,1,CPXF_SETTARGET)
+		loop
+	See:
+		TNT1 A 1 A_CheckProximity("Pain.Host2","Facehugger",150,1,CPXF_SETTARGET)
+		TNT1 A 1 A_CheckProximity("Pain.Host3","FacehuggerQ",150,1,CPXF_SETTARGET)
+		loop
+	Pain:
+		TNT1 A 1 
+		goto See
+	Pain.Host2:
+		TNT1 A 1 A_Jump(256,"Idle.Host2")
+		goto See
+	Idle.Host2:
+		TNT1 A 1 A_KillTarget
+		TNT1 A 1 A_NoBlocking
+		TNT1 A 1 A_ChangeFlag(NOTARGET, TRUE)
+		TNT1 A 1 A_Jump(150,"Idle.Burst2")
+		loop
+	Idle.Burst2:
+		TNT1 B 10 A_PlaySoundEx("Facehugger/Egg",0)
+		TNT1 B 1 A_SpawnItemEx("BursterWarrior",0,0,51,0,0,0,0,0,0,2)
+		MSBL ABCDEFGH 3
+		TNT1 B 1 A_DamageSelf(1000,0,DMSS_KILL)
+		Stop
+	Pain.Host3:
+		TNT1 A 1 A_Jump(256,"Idle.Host3")
+		goto See
+	Idle.Host3:
+		TNT1 A 1 A_KillTarget
+		TNT1 A 1 A_NoBlocking
+		TNT1 A 1 A_ChangeFlag(NOTARGET, TRUE)
+		TNT1 A 1 A_Jump(150,"Idle.Burst3")
+		loop
+	Idle.Burst3:
+		TNT1 B 10 A_PlaySoundEx("Facehugger/Egg",0)
+		TNT1 B 1 A_SpawnItemEx("BursterQueen",0,0,51,0,0,0,0,0,0)
+		MSBL ABCDEFGH 3
+		TNT1 B 1 A_DamageSelf(1000,0,DMSS_KILL)
+		Stop
+	Death:
+		TNT1 A -1
+		Stop
+	}
+}
+
+ACTOR FacehuggerCarcas
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.1
+	XScale 0.12
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+THRUACTORS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "KAISER/FALL"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .3
+	WallBounceFactor 0.75
+	BounceCount 3
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		FHGR M 12
+		Loop
+	Death:
+		FHGR M -1
+	}
+}
+ACTOR FacehuggerCarcasQ
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.1
+	XScale 0.12
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+THRUACTORS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "KAISER/FALL"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .3
+	WallBounceFactor 0.75
+	BounceCount 3
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		FHGQ M 12
+		Loop
+	Death:
+		FHGQ M -1
+	}
+}
+
+
+//MONSTER REPLACERS
+
+Actor XWtoken 
+{
+	Tag "Xeno Warrior Token"
+	YScale 0.2
+	XScale 0.22
+	States
+	{
+	Spawn:
+		ALW1 A -1
+		Stop
+	}
+}
+
+ACTOR Blood4 
+{
+	Scale 0.10
+	-PUSHABLE
+	States
+	{
+	Spawn:
+		BLUD ABCDEFGHIJ 2 
+		Stop
+	Spray:
+		BLUD A 1 A_SetScale(0.20)
+		BLUD ABCDEFGHIJ 32
+		TNT1 A 32
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR Blood3 Replaces Blood
+{
+	Scale 0.10
+	-PUSHABLE
+	States
+	{
+	Spawn:
+		BLUD ABCDEFGHIJ 2 
+		Stop
+	Spray:
+		BLUD A 1 A_SetScale(0.20)
+		BLUD ABCDEFGHIJ 32
+		TNT1 A 32
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR Panic : Inventory 
+{
+	Inventory.MaxAmount 1
+	+ignoreskill
+}
+
+ACTOR ShoeGibPink
+{
+	Radius 5
+	Height 5
+	Speed 3
+	Friction 2
+	FastSpeed 3
+	Damage 0
+	YScale 0.12
+	XScale 0.13
+	Gravity 0.6
+	PushFactor 1
+	Projectile
+	LightLevel 50
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+THRUACTORS
+	+PUSHABLE
+	-COUNTKILL
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		TNT1 A 0 A_Jump(128,"Idle.Alt")
+		Goto Idle
+	Idle:
+		CWS1 A 12
+		Loop
+	Death:
+		TNT1 A 0 A_JumpIfInventory("Panic",1,"Death.Alt")
+		CWS1 A 1500
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	Idle.Alt:
+		TNT1 A 0 A_GiveInventory("Panic",1)
+		CWS1 B 12 
+		Loop
+	Death.Alt:
+		CWS1 B 1500
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR CIVPedFemaleType1Torso 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.12
+	XScale 0.13
+	Gravity 0.85
+	PushFactor 1
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+THRUACTORS
+	+PUSHABLE
+	SeeSound "ZOMBIE/HD"
+	DeathSound "KAISER/FALL"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .6
+	WallBounceFactor 0.75
+	BounceCount 2
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		CW12 R 10
+		Goto Death
+	Death:
+		TNT1 A 0 A_SpawnItemEx("BloodFloor",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		CW12 S -1
+	}
+}
+
+ACTOR FireSpit
+{
+	Radius 20
+	Height 8
+	Speed 1
+	Damage (1)
+	DamageType "Fire"
+	FastSpeed 1
+	YScale 0.3
+	XScale 0.32
+	Gravity 0.6
+	Projectile
+	-NOGRAVITY
+	+EXTREMEDEATH
+	+DONTREFLECT
+	+THRUACTORS
+	+FOILINVUL
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		Goto Idle
+	Idle:
+		F1RE ABCDEFGH 3  
+		Loop
+	Death:
+		TNT1 A 1 A_SpawnItemEx("FireGib",fRandom(-7,7),fRandom(-7,7),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+		Stop
+	}
+}
+ACTOR FireSpitFast
+{
+	Radius 20
+	Height 8
+	Speed 1
+	Damage (1)
+	DamageType "Fire"
+	FastSpeed 1
+	YScale 0.3
+	XScale 0.32
+	Gravity 0.6
+	Projectile
+	-NOGRAVITY
+	+EXTREMEDEATH
+	+DONTREFLECT
+	+THRUACTORS
+	+FOILINVUL
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		F1RE A 1 A_ChangeVelocity(Random(1,15),0,0,CVF_RELATIVE)
+		Goto Idle
+	Idle:
+		F1RE ABCDEFGH 3  
+		Loop
+	Death:
+		TNT1 A 1 A_SpawnItemEx("FireGib",fRandom(-7,7),fRandom(-7,7),fRandom(-3,3),0,0,0,0,SXF_NOCHECKPOSITION,50)
+		TNT1 A 1 A_NoBlocking
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+		Stop
+	}
+}
+
+Actor FireGib
+{
+	Tag "Fire"
+	Health 1
+	Radius 5
+	Height 5
+	YScale 0.3
+	XScale 0.33
+	DamageType "Fire"
+	Gravity 1
+	SeeSound "EMPTY/BLANK"
+	ActiveSound "Fire/Fire"
+	DamageType Fire
+	+INVULNERABLE
+	+NOBLOOD
+	-NOGRAVITY
+	-SOLID
+	+THRUACTORS
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		TNT1 A 0 A_Jump(256,"Death")
+		loop
+	Death:
+		TNT1 A 0 A_Jump(150,"Death.Alt")
+		TNT1 A 0 A_SetScale(0.4,0.44)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.35,0.375)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.3,0.33)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.25,0.275)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.2,0.22)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.15,0.175)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.1,0.11)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.05,0.075)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+		Stop
+	Death.Alt:
+		TNT1 A 0 A_SetScale(0.4,0.44)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.35,0.375)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.3,0.33)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.25,0.275)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.2,0.22)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.15,0.175)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.1,0.11)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 0 A_SetScale(0.05,0.075)
+		F1RE A 1 Bright A_Explode((2),25,XF_THRUSTLESS|XF_CIRCULAR,0,25)
+		F1RE ABCDEFGH 3 Bright 
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+		Stop
+	}
+}
+
+Actor BigFireGib
+{
+	Tag "Fire"
+	Health 1
+	Radius 5
+	Height 20
+	YScale 0.7
+	XScale 0.77
+	DamageType "Fire"
+	Gravity 1
+	SeeSound "EMPTY/BLANK"
+	ActiveSound "Fire/Fire"
+	DamageType Fire
+	+INVULNERABLE
+	+NOBLOOD
+	-NOGRAVITY
+	-SOLID
+	+THRUACTORS
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		SBEM A 0 A_Jump(256,"Death")
+		loop
+	Death:
+		F1RE A 1 Bright A_PlaySound("Fire/Fire",0,.5)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.65,0.675)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.6,0.66)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.55,0.575)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.5,0.55)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.45,0.475)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.4,0.44)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.35,0.375)
+		F1RE A 1 Bright {A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40);A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90);}
+		F1RE ABCD 3 Bright 
+		F1RE A 1 Bright A_CustomMissile("FireSmoke",0,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,90)
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.3,0.33)
+		F1RE A 1 Bright A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40)
+		F1RE ABCD 3 Bright 
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.25,0.275)
+		F1RE A 1 Bright A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40)
+		F1RE ABCD 3 Bright 
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.2,0.22)
+		F1RE A 1 Bright A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40)
+		F1RE ABCD 3 Bright 
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.15,0.175)
+		F1RE A 1 Bright A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40)
+		F1RE ABCD 3 Bright 
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.1,0.11)
+		F1RE A 1 Bright A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40)
+		F1RE ABCD 3 Bright 
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_SetScale(0.05,0.075)
+		F1RE A 1 Bright A_Explode((2),40,XF_THRUSTLESS|XF_CIRCULAR,0,40)
+		F1RE ABCD 3 Bright 
+		F1RE EFGH 3 Bright
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+		Stop
+	}
+}
+
+ACTOR FireSmoke
+{
+	Radius 2
+	Height 2
+	Speed 0.3
+	FastSpeed 0.3
+	Friction 10
+	Damage 0
+	Scale .01
+	Gravity -0.005
+	FloatBobStrength 0.2
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+NOEXPLODEFLOOR
+	-BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	-BOUNCEONACTORS
+	+BOUNCEONCEILINGS
+	+DONTREFLECT
+	+ROLLSPRITE
+	+THRUACTORS
+	+FLOATBOB
+	+NOBLOOD
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor 0.5
+	WallBounceFactor 0.5
+	HitObituary "You were strangled by a cloud of Mustard Gas!"
+	Obituary "You were strangled by a cloud of Mustard Gas!"
+	BounceType Doom
+	States
+	{
+	Spawn:
+		TNT1 AA 0  
+		TNT1 A 0 A_ChangeFlag("SPRITEFLIP",Random(0,1))
+		SMk2 B 1 A_FadeOut(0.2)
+		SMk2 B 2 A_SetScale(0.1,0.05)
+		SMk2 B 2 A_SetScale(0.2,0.1)
+		SMk2 B 2 A_SetScale(0.3,0.15)
+		SMk2 B 2 A_SetScale(0.4,0.2)
+		SMk2 B 2 A_SetScale(0.5,0.25)
+		SMk2 B 2 A_SetScale(0.6,0.3)
+		SMk2 B 2 A_SetScale(0.7,0.35)
+		SMk2 B 2 A_SetScale(0.8,0.4)
+		SMk2 B 2 A_SetScale(0.9,0.45)
+		SMk2 B 2 A_SetScale(1,0.5)
+		SMk2 B 2 A_SetScale(1.1,0.55)
+		SMk2 B 2 A_SetScale(1.2,0.6)
+		SMk2 B 2 A_SetScale(1.3,0.65)
+		SMk2 B 2 A_SetScale(1.4,0.8)
+		SMk2 B 2 A_SetScale(1.5,1)
+		Goto Idle
+	Idle:
+		SMk2 B 3 A_FadeOut(0.01)
+		loop
+	Death:
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+		SMk2 B -1
+		Stop
+	}
+}
+
+ACTOR KaiserMeat1 
+{
+	Radius 5
+	Height 5
+	Speed 10
+	Friction 2
+	FastSpeed 10
+	Damage 0
+	YScale 0.07
+	XScale 0.08
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	+THRUACTORS
+	+FORCEDECAL
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn: 
+		GS15 W 1 A_CustomMissile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0)
+		GS15 W 20 A_SpawnItemEx("Blood4",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_Jump(256,"Death")
+		Loop
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("BloodFloor2",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		GS15 W 1500
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR KaiserMeat2
+{
+	Radius 5
+	Height 10
+	Speed 5
+	Friction 2
+	FastSpeed 10
+	Damage 0
+	YScale 0.07
+	XScale 0.08
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+THRUACTORS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn: 
+		GS15 X 1 A_CustomMissile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0)
+		GS15 X 20 A_SpawnItemEx("Blood4",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_Jump(256,"Death")
+		Loop
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("BloodFloor2",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		GS15 X 1500
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR KaiserMeat3
+{
+	Radius 5
+	Height 5
+	Speed 10
+	Friction 2
+	FastSpeed 10
+	Damage 0
+	YScale 0.07
+	XScale 0.08
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+THRUACTORS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn: 
+		GS15 Y 1 A_CustomMissile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0)
+		GS15 Y 12 A_SpawnItemEx("Blood4",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_Jump(256,"Death")
+		Loop
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("BloodFloor2",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		GS15 Y 1500
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR KaiserMeat4
+{
+	Radius 5
+	Height 5
+	Speed 10
+	Friction 2
+	FastSpeed 10
+	Damage 0
+	YScale 0.07
+	XScale 0.08
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	LightLevel 25
+	+ADDLIGHTLEVEL
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+THRUACTORS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn: 
+		GS15 Z 1 A_CustomMissile("KaiserBloodSplat",30,0,RANDOM(-180,180),CMF_ABSOLUTEPITCH,0)
+		GS15 Z 12 A_SpawnItemEx("Blood4",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		TNT1 A 0 A_Jump(256,"Death")
+		Loop
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("BloodFloor2",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		GS15 Z 1500
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+ACTOR Meat1 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.15
+	XScale 0.16
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+THRUACTORS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		BLUD ABCDEFGHIJ 2 
+		TNT1 A 12 A_SpawnItemEx("Blood4",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		F1RE A 0 A_Jump(256,"Death")
+		Loop
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("BloodFloor2",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		TNT1 A -1
+	}
+}
+
+ACTOR MeatCF 
+{
+	Radius 5
+	Height 5
+	Speed 5
+	Friction 2
+	FastSpeed 5
+	Damage 0
+	YScale 0.15
+	XScale 0.16
+	Gravity 0.8
+	PushFactor 1
+	Projectile
+	-NOGRAVITY
+	+RANDOMIZE
+	+NOPAIN
+	+DONTREFLECT
+	+BOUNCEONWALLS
+	+THRUACTORS
+	+BOUNCEONFLOORS
+	+BOUNCEONCEILINGS
+	+PUSHABLE
+	SeeSound "EMPTY/BLANK"
+	DeathSound "EMPTY/BLANK"
+	Bouncesound "EMPTY/BLANK"
+	BounceFactor .5
+	WallBounceFactor 0.75
+	BounceCount 5
+	BounceType HEXEN
+	States
+	{
+	Spawn:
+		BLUD ABCDEFGHIJ 2 
+		TNT1 A 12 A_SpawnItemEx("Blood4",random(-1,1),random(-1,1),random(4,16),random(-2,2),random(-2,2),random(-2,2),SXF_CLIENTSIDE)
+		F1RE A 0 A_Jump(256,"Death")
+		Loop
+	Death:
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 A_SpawnItemEx("BloodFloor2",0,0,0,0,0,-10,0,SXF_NOCHECKPOSITION|SXF_CLIENTSIDE,0)
+		TNT1 A -1
+	}
+}
+
+ACTOR KaiserBloodSplat
+{
+	Radius 20
+	Height 8
+	Speed 30 
+	Damage 0
+	FastSpeed 50
+	Scale 0.6
+	Gravity 0.4
+	Projectile
+	-NOGRAVITY
+	+DONTREFLECT
+	SeeSound "Empty/Blank"
+	DeathSound "Empty/Blank"
+	States
+	{
+	Spawn:
+		TNT1 A 1  
+		Loop
+	Death:
+		TNT1 A 1 
+		Stop
+	}
+}
+
+ACTOR Crawl : Inventory {}
+ACTOR Crawl1 : Inventory {}
+ACTOR Burst : Inventory {}
+
+actor YellowCard2 6
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("YellowCard",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor RedCard2 13
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("RedCard",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor BlueCard2 5
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("BlueCard",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor YellowSkull2 39
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("YellowSkull",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor RedSkull2 38
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("RedSkull",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor BlueSkull2 40
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("BlueSkull",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_NOCHECKPOSITION,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor BFG90002 2006
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("BFG9000",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor RocketLauncher2 2003
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("RocketLauncher",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor PlasmaRifle2 2004
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("PlasmaRifle",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",-35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGGQ",-35,-35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor SuperShotgun2 82
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("SuperShotgun",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor Chaingun2 2002
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("Chaingun",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+actor Shotgun2 2001
+{
+States
+	{
+	Spawn:
+		TNT1 AA 0
+		TNT1 A 0 A_SpawnItemEx("Shotgun",0,0,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		TNT1 A 0 A_SpawnItemEx("XEGG",35,35,25,0,0,0,0,SXF_TRANSFERPOINTERS,0)
+		Goto Idle
+	Idle:
+		TNT1 A 1
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+
+// SetActorFlag(0, "THRUSPECIES", TRUE);

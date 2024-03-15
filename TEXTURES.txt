@@ -1,0 +1,1046 @@
+
+// M16
+
+sprite M16AA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,400
+patch M16AA0, 0, 0
+}
+sprite M16AB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,425
+patch M16AB0, 0, 0
+}
+sprite M16AC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AC0, 0, 0
+}
+sprite M16AD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AD0, 0, 0
+}
+sprite M16AE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AE0, 0, 0
+}
+sprite M16AF0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AF0, 0, 0
+}
+sprite M16AG0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AG0, 0, 0
+}
+sprite M16AH0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AH0, 0, 0
+}
+sprite M16AI0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AI0, 0, 0
+}
+sprite M16AJ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AJ0, 0, 0
+}
+sprite M16AK0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AK0, 0, 0
+}
+sprite M16AL0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AL0, 0, 0
+}
+sprite M16AM0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AM0, 0, 0
+}
+sprite M16AN0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AN0, 0, 0
+}
+sprite M16AO0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AO0, 0, 0
+}
+sprite M16AP0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AP0, 0, 0
+}
+sprite M16AQ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AQ0, 0, 0
+}
+sprite M16AR0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AR0, 0, 0
+}
+sprite M16AS0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AS0, 0, 0
+}
+sprite M16AT0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AT0, 0, 0
+}
+sprite M16AU0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AU0, 0, 0
+}
+sprite M16AV0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AV0, 0, 0
+}
+sprite M16AW0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AW0, 0, 0
+}
+sprite M16AX0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AX0, 0, 0
+}
+sprite M16AY0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AY0, 0, 0
+}
+sprite M16AZ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16AZ0, 0, 0
+}
+sprite M16BA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BA0, 0, 0
+}
+sprite M16BB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BB0, 0, 0
+}
+sprite M16BC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BC0, 0, 0
+}
+sprite M16BD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BD0, 0, 0
+}
+sprite M16BE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BE0, 0, 0
+}
+sprite M16BF0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BF0, 0, 0
+}
+sprite M16BG0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BG0, 0, 0
+}
+sprite M16BH0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BH0, 0, 0
+}
+sprite M16BI0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BI0, 0, 0
+}
+sprite M16BJ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BJ0, 0, 0
+}
+sprite M16BK0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BK0, 0, 0
+}
+sprite M16BL0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BL0, 0, 0
+}
+sprite M16BM0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,425
+patch M16BM0, 0, 0
+}
+sprite M16BN0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BN0, 0, 0
+}
+sprite M16BO0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M16BO0, 0, 0
+}
+sprite M16CA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,400
+patch M16CA0, 0, 0
+}
+sprite M16CB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,400
+patch M16CB0, 0, 0
+}
+sprite M16CC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,400
+patch M16CC0, 0, 0
+}
+sprite M16CD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,400
+patch M16CD0, 0, 0
+}
+sprite M16CE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,400
+patch M16CE0, 0, 0
+}
+sprite M16CF0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,200
+patch M16CF0, 0, 0
+}
+sprite M16DA0, 800, 800
+{
+xscale 2.5
+yscale 2.5
+offset -2,150
+patch M16DA0, 0, 0
+}
+sprite M16DB0, 800, 800
+{
+xscale 2.5
+yscale 2.5
+offset -2,150
+patch M16DB0, 0, 0
+}
+sprite M16DC0, 800, 800
+{
+xscale 2.5
+yscale 2.5
+offset -2,150
+patch M16DC0, 0, 0
+}
+sprite M16DD0, 800, 800
+{
+xscale 2.5
+yscale 2.5
+offset -2,150
+patch M16DD0, 0, 0
+}
+sprite M16DE0, 800, 800
+{
+xscale 2.5
+yscale 2.5
+offset -2,150
+patch M16DE0, 0, 0
+}
+sprite M16DF0, 800, 800
+{
+xscale 2.5
+yscale 2.5
+offset -2,150
+patch M16DF0, 0, 0
+}
+sprite M60AA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AA0, 0, 0
+}
+sprite M60AB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AB0, 0, 0
+}
+sprite M60AC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AC0, 0, 0
+}
+sprite M60AD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AD0, 0, 0
+}
+sprite M60AE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AE0, 0, 0
+}
+sprite M60AF0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AF0, 0, 0
+}
+sprite M60AG0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AG0, 0, 0
+}
+sprite M60AH0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AH0, 0, 0
+}
+sprite M60AI0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AI0, 0, 0
+}
+sprite M60AJ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AJ0, 0, 0
+}
+sprite M60AK0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AK0, 0, 0
+}
+sprite M60AL0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AL0, 0, 0
+}
+sprite M60AM0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AM0, 0, 0
+}
+sprite M60AN0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AN0, 0, 0
+}
+sprite M60AO0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AO0, 0, 0
+}
+sprite M60AP0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AP0, 0, 0
+}
+sprite M60AQ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AQ0, 0, 0
+}
+sprite M60AR0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AR0, 0, 0
+}
+sprite M60AS0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AS0, 0, 0
+}
+sprite M60AT0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AT0, 0, 0
+}
+sprite M60AU0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AU0, 0, 0
+}
+sprite M60AV0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AV0, 0, 0
+}
+sprite M60AW0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AW0, 0, 0
+}
+sprite M60AX0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AX0, 0, 0
+}
+sprite M60AY0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AY0, 0, 0
+}
+sprite M60AZ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60AZ0, 0, 0
+}
+sprite M60BA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BA0, 0, 0
+}
+sprite M60BB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BB0, 0, 0
+}
+sprite M60BC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BC0, 0, 0
+}
+sprite M60BD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BD0, 0, 0
+}
+sprite M60BE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BE0, 0, 0
+}
+sprite M60BF0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BF0, 0, 0
+}
+sprite M60BG0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BG0, 0, 0
+}
+sprite M60BH0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BH0, 0, 0
+}
+sprite M60BI0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BI0, 0, 0
+}
+sprite M60BJ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BJ0, 0, 0
+}
+sprite M60BK0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BK0, 0, 0
+}
+sprite M60BL0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BL0, 0, 0
+}
+sprite M60BM0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BM0, 0, 0
+}
+sprite M60BN0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BN0, 0, 0
+}
+sprite M60BO0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BO0, 0, 0
+}
+sprite M60BP0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BP0, 0, 0
+}
+sprite M60BQ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BQ0, 0, 0
+}
+sprite M60BR0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BR0, 0, 0
+}
+sprite M60BS0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BS0, 0, 0
+}
+sprite M60BT0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BT0, 0, 0
+}
+sprite M60BU0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BU0, 0, 0
+}
+sprite M60BV0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BV0, 0, 0
+}
+sprite M60BW0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BW0, 0, 0
+}
+sprite M60BX0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BX0, 0, 0
+}
+sprite M60BY0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BY0, 0, 0
+}
+sprite M60BZ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60BZ0, 0, 0
+}
+sprite M60CA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CA0, 0, 0
+}
+sprite M60CB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CB0, 0, 0
+}
+sprite M60CC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CC0, 0, 0
+}
+sprite M60CD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CD0, 0, 0
+}
+sprite M60CE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CE0, 0, 0
+}
+sprite M60CF0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CF0, 0, 0
+}
+sprite M60CG0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CG0, 0, 0
+}
+sprite M60CH0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CH0, 0, 0
+}
+sprite M60CI0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CI0, 0, 0
+}
+sprite M60CJ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CJ0, 0, 0
+}
+sprite M60CK0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CK0, 0, 0
+}
+sprite M60CL0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CL0, 0, 0
+}
+sprite M60CM0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CM0, 0, 0
+}
+sprite M60CN0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CN0, 0, 0
+}
+sprite M60CO0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CO0, 0, 0
+}
+sprite M60CP0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60CP0, 0, 0
+}
+sprite M60DA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DA0, 0, 0
+}
+sprite M60DB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DB0, 0, 0
+}
+sprite M60DC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DC0, 0, 0
+}
+sprite M60DD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DD0, 0, 0
+}
+sprite M60DE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DE0, 0, 0
+}
+sprite M60DF0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DF0, 0, 0
+}
+sprite M60DG0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DG0, 0, 0
+}
+sprite M60DH0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DH0, 0, 0
+}
+sprite M60DI0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DI0, 0, 0
+}
+sprite M60DJ0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DJ0, 0, 0
+}
+sprite M60DK0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DK0, 0, 0
+}
+sprite M60DL0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DL0, 0, 0
+}
+sprite M60DM0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DM0, 0, 0
+}
+sprite M60DN0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DN0, 0, 0
+}
+sprite M60DO0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60DO0, 0, 0
+}
+sprite M60DP0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,400
+patch M60DP0, 0, 0
+}
+sprite M60EA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60EA0, 0, 0
+}
+sprite M60EB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60EB0, 0, 0
+}
+sprite M60EC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60EC0, 0, 0
+}
+sprite M60ED0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60ED0, 0, 0
+}
+sprite M60EE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,450
+patch M60EE0, 0, 0
+}
+sprite M60FA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 21,265
+patch M60FA0, 0, 0
+}
+sprite M60FB0, 800, 800
+{
+xscale 2
+yscale 2
+offset 21,265
+patch M60FB0, 0, 0
+}
+sprite M60FC0, 800, 800
+{
+xscale 2
+yscale 2
+offset 21,265
+patch M60FC0, 0, 0
+}
+sprite M60FD0, 800, 800
+{
+xscale 2
+yscale 2
+offset 21,265
+patch M60FD0, 0, 0
+}
+sprite M60FE0, 800, 800
+{
+xscale 2
+yscale 2
+offset 21,265
+patch M60FE0, 0, 0
+}
+sprite M16PA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,350
+patch M16PA0, 0, 0
+}
+sprite M60PA0, 800, 800
+{
+xscale 2
+yscale 2
+offset 110,350
+patch M60PA0, 0, 0
+}
