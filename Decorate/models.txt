@@ -1,0 +1,98 @@
+
+Actor GiantRESIN
+{
+-Solid
+States
+	{
+	Spawn:
+		RES3 A -1 Bright
+		loop
+	}
+}
+Actor BloodFloor
+{
+-Solid
+States
+	{
+	Spawn:
+		BF01 A 1500 Bright
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+Actor BloodFloor2
+{
+-Solid
+States
+	{
+	Spawn:
+		BF01 B 1500 Bright
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+Actor BloodFloorX
+{
+-Solid
+States
+	{
+	Spawn:
+		BF0X B -1 Bright
+		Goto Idle
+	IDLE:
+		BF0X B 1500 Bright
+		TNT1 A 1 Thing_ChangeTID(0,88)
+		TNT1 A 1 ACS_NamedExecute("RemoveSleg",0)
+	}
+}
+Actor GiantRESINV
+{
+-Solid
+States
+	{
+	Spawn:
+		RES3 A -1 Bright
+		loop
+	}
+}
+Actor GiantRESINW
+{
+-Solid
+States
+	{
+	Spawn:
+		RES3 A -1 Bright
+		loop
+	}
+}
+Actor GiantRESINX
+{
+-Solid
+States
+	{
+	Spawn:
+		RES3 A -1 Bright
+		loop
+	}
+}
+Actor GiantRESINY
+{
+-Solid
+States
+	{
+	Spawn:
+		RES3 A -1 Bright
+		loop
+	}
+}
+Actor GiantRESINZ
+{
+-Solid
+States
+	{
+	Spawn:
+		RES3 A -1 Bright
+		loop
+	}
+}
+
