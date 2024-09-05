@@ -2,6 +2,12 @@
 #library "XI"
 #include "zcommon.acs"
 
+
+str songs_name[11] = { "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN", "0NMBDN" };
+int pick_what_song_play;
+
+bool linetriggered;
+
 script "XenoAggro" (void)
 {
 Thing_Hate(0, 2, 4);
@@ -15,9 +21,27 @@ script "RemoveSleg" (void)
 
 script 1 ENTER
 {
+ pick_what_song_play= random(0, 11 - 1);
+ SetMusic(songs_name[pick_what_song_play]);
  GiveInventory("Allmap",1);
  SetActorProperty(0,APROP_Species,"CIVIL");
  SetActorFlag(0, "THRUSPECIES", TRUE);
  delay (1);
  Thing_ChangeTID(0,2);
 }
+
+script 2 ENTER
+{
+ While(True)
+ {
+ delay (35);
+ GiveInventory("Health",5);
+ }
+}
+
+script "CIV" (void)
+{
+SetActorFlag(0, "FRIENDLY", TRUE);
+Thing_ChangeTID(0,2);
+}
+
